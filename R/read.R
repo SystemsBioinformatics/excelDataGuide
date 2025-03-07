@@ -154,9 +154,17 @@ read_data <- function(drfile, guide, checkversion = FALSE, checkname = FALSE) {
   }
 
   if (checkversion) {
-     if (guide$template.version != result$template.metadata$template.version) {
-       rlang::abort(glue::glue("The version of the guide ({guide$template.version}) does not match the version of the excel template ({result$template.metadata$template.version})."))
-     }
+    num.template.version <- package_version(result$template.metadata$template.version)
+    num.min.version <- package_version(guide$template.min.version)
+    if (num.template.version < num.min.version) {
+       rlang::abort(glue::glue("The guide is incompatible with the template. The template version should be minimally {guide$template.min.version}, whereas it is {result$template.metadata$template.version})."))
+    }
+    if (!is.null(guide$template.min.version)) {
+      num.max.version <- package_version(guide$template.min.version)
+      if (num.max.version < num.template.version) {
+        rlang::abort(glue::glue("The guide is incompatible with the template. The template version should be maximally {guide$template.max.version}, whereas it is {result$template.metadata$template.version})."))
+      }
+    }
   }
 
   if (checkname) {
