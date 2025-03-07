@@ -1,0 +1,44 @@
+guide.version: '1.0'
+template.name: competition
+template.min.version: '9.3'
+template.max.version: ~
+plate.format: 96
+template.metadata:
+  - varname: template.version
+    sheet: description
+    cell: B2
+translations:
+  - long: Version
+    short: template.version
+  - long: Template Name
+    short: template.name
+  - long: Study identifier
+    short: studyID
+  - long: Experiment identifier
+    short: exptID
+  - long: Plate identifier
+    short: plateID
+  - long: Run identifier
+    short: runID
+  - long: Instrument identifier
+    short: instrID
+  - long: Experimenter name
+    short: experimenter
+  - long: Date of experiment
+    short: date
+  - long: Laboratory identifier
+    short: labID
+  - long: Temperature (°C)
+    short: temp
+  - long: Item 1
+    short: itm1ID
+  - long: Molar mass 1
+    short: itm1Mw
+  - long: Run identifier 1
+    short: run1ID
+  - long: Item 2
+    short: itm2ID
+  - long: Molar mass 2
+    short: itm2Mw
+  - long: Run identifier 2
+    short: run2ID

@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "http://few.vu.nl/~molenaar/schemas/excelguide_schema.json",
+  "title": "Excel guide schema",
+  "description": "JSON schema for validation of excel data guides",
+  "type": "object",
+  "required": [ "guide.version", "template.name", "template.min.version", "template.max.version", "locations", "translations" ],
+  "properties": {
+    "guide.version": {
+      "description": "Version of the guide",
+      "type": "string"
+    },
+    "template.name": {
+      "description": "Name of the template",
+      "type": "string"
+    },
+    "template.min.version": {
+      "description": "Minimal compatible version of the template",
+      "type": "string"
+    },
+    "template.max.version": {
+      "description": "Maximal compatible version of the template",
+      "type": [ "string", "null" ]
+    },
+    "plate.format": {
+      "description": "Microplate format",
+      "enum": [ "24", 24, "48", 48, "96", 96, "384", 384 ]
+    },
+    "template.metadata" : {
+      "description": "Metadata of the template",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "varname": {
+            "description": "Name of the variable",
+            "enum" : [ "template.name", "template.version" ]
+          },
+          "sheet": {
+            "description": "Name of an excel sheet",
+            "type": "string"
+          },
+          "cell": {
+            "description": "Excel sheet cell",
+            "type": "string",
+            "pattern": "^[A-Z]+\\d+$"
+          }
+        },
+        "required": [ "varname", "sheet", "cell" ]
+      }
+    },
+    "locations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": [ "sheet", "type", "translate", "varname", "ranges" ],
+        "properties": {
+          "sheet": {
+            "description": "Name of an excel sheet",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of data",
+            "enum": [ "keyvalue", "table", "platedata" ]
+          },
+          "translate": {
+            "description": "Whether to translate keys",
+            "type": "boolean"
+          },
+          "varname": {
+            "description": "Name of the variable under which to store the data",
+            "type": "string"
+          },
+          "ranges": {
+            "description": "An array of ranges",
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z]+\\d+:[A-Z]+\\d+$"
+            }
+          },
+          "atomicclass": {
+            "description": "Interpreted type of data, using R-conventions",
+            "enum": [ "numeric", "character", "integer", "logical" ]
+          }
+        }
+      }
+    },
+    "translations": {
+      "type": "array",
+      "$comment": "Uniqueness of combinations does not guarantee uniqueness of individual values",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["long", "short"],
+        "additionalProperies": false,
+        "$comment": "Exactly these and no more properties are allowed because translations will be read into a table",
+        "properties": {
+          "long": {
+            "description": "Long name",
+            "type": "string"
+          },
+          "short": {
+            "description": "Short name",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

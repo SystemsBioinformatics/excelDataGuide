@@ -1,0 +1,79 @@
+template.name: competition
+template.version:  '9.3'
+plate.format: 96
+locations:
+  - sheet: description
+    type: keyvalue
+    translate: true
+    varname: metadata
+    ranges:
+      - A2:B2
+      - A10:B14
+      - A16:B16
+      - A18:B18
+      - A20:B20
+  - sheet: description
+    type: keyvalue
+    translate: true
+    atomicclass: numeric
+    varname: metadata
+    ranges:
+      - A15:B15
+      - A17:B17
+      - A19:B19
+      - A21:B21
+  - sheet: _data
+    type: platedata
+    translate: false
+    varname: platedata
+    ranges:
+      - A1:M9
+      - A11:M19
+      - A21:M29
+      - A31:M39
+      - A41:M49
+      - A51:M59
+      - A61:M69
+      - A71:M79
+      - A81:M89
+      - A91:M99
+  - sheet: _data
+    type: table
+    translate: false
+    varname: rejections
+    ranges:
+      - A101:B111
+  - sheet: _parameters
+    type: keyvalue
+    translate: false
+    varname: parameters
+    atomicclass: numeric
+    ranges:
+      - A24:B24
+      - A27:B28
+      - A31:B32
+      - A35:B36
+  - sheet: _parameters
+    type: keyvalue
+    translate: false
+    varname: parameters
+    ranges:
+      - A39:B39
+translations:
+  File path:             filepath
+  Version:               drt.version
+  Study identifier:      studyID
+  Experiment identifier: exptID
+  Plate identifier:      plateID
+  Run identifier:        runID
+  Instrument identifier: instrID
+  Experimenter name:     experimenter
+  Date of experiment:    date
+  Laboratory identifier: labID
+  Temperature (°C):      temp
+  Item 1:                itm1ID
+  Molar mass 1:          itm1Mw
+  Run identifier 1:      run1ID
+  Item 2:                itm2ID
+  Molar mass 2:          itm2Mw
+  Run identifier 2:      run2ID

@@ -1,0 +1,34 @@
+Package: excelDataGuide
+Title: Read Data from templated Excel Data Reports
+Version: 0.1.0
+Authors@R: 
+    person("Douwe", "Molenaar", , "d.molenaar@vu.nl", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-7108-4545"))
+Description: Provides functions as well as a YAML guide format to facilitate 
+    reading data from filled-out excel templates. In particular, the package 
+    provides such facilities for experiments performed with microplates.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    jsonlite,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    cellranger,
+    dplyr,
+    glue,
+    readxl,
+    rlang,
+    stringr,
+    tibble,
+    yaml
+VignetteBuilder: knitr
+URL: https://github.com/douwe/excelDataGuide
+BugReports: https://github.com/douwe/excelDataGuide/issues
+Depends: 
+    R (>= 3.5)
+LazyData: true

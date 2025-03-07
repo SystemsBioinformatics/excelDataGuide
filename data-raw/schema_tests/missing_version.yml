@@ -1,0 +1,100 @@
+guide.version: '1.0'
+template.name: competition
+template.max.version: ~
+plate.format: 96
+template.metadata:
+  - varname: template.version
+    sheet: description
+    cell: B2
+locations:
+  - sheet: description
+    type: keyvalue
+    translate: true
+    varname: metadata
+    ranges:
+      - A10:B14
+      - A16:B16
+      - A18:B18
+      - A20:B20
+  - sheet: description
+    type: keyvalue
+    translate: true
+    atomicclass: numeric
+    varname: metadata
+    ranges:
+      - A15:B15
+      - A17:B17
+      - A19:B19
+      - A21:B21
+  - sheet: _data
+    type: platedata
+    translate: false
+    varname: plate
+    ranges:
+      - A1:M9
+      - A11:M19
+      - A21:M29
+      - A31:M39
+      - A41:M49
+      - A51:M59
+      - A61:M69
+      - A71:M79
+      - A81:M89
+      - A91:M99
+  - sheet: _data
+    type: table
+    translate: false
+    varname: rejections
+    ranges:
+      - A101:B111
+  - sheet: _parameters
+    type: keyvalue
+    translate: false
+    varname: parameters
+    atomicclass: numeric
+    ranges:
+      - A24:B24
+      - A27:B28
+      - A31:B32
+      - A35:B36
+  - sheet: _parameters
+    type: keyvalue
+    translate: false
+    varname: parameters
+    ranges:
+      - A39:B39
+translations:
+  - long: Version
+    short: template.version
+  - long: Template Name
+    short: template.name
+  - long: Study identifier
+    short: studyID
+  - long: Experiment identifier
+    short: exptID
+  - long: Plate identifier
+    short: plateID
+  - long: Run identifier
+    short: runID
+  - long: Instrument identifier
+    short: instrID
+  - long: Experimenter name
+    short: experimenter
+  - long: Date of experiment
+    short: date
+  - long: Laboratory identifier
+    short: labID
+  - long: Temperature (°C)
+    short: temp
+  - long: Item 1
+    short: itm1ID
+  - long: Molar mass 1
+    short: itm1Mw
+  - long: Run identifier 1
+    short: run1ID
+  - long: Item 2
+    short: itm2ID
+  - long: Molar mass 2
+    short: itm2Mw
+  - long: Run identifier 2
+    short: run2ID
