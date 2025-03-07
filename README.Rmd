@@ -39,8 +39,9 @@ The basic usage of the package only requires two commands: reading (and checking
 
 ```{r example}
 library(excelDataGuide)
-guide <- read_guide(system.file("extdata", "example_guide.yml", package = "excelDataGuide"))
-data <- read_data(system.file("extdata", "example_data.xlsx", package = "excelDataGuide"), guide)
+datafile <- system.file("extdata", "example_data.xlsx", package = "excelDataGuide")
+guidefile <- system.file("extdata", "example_guide.yml", package = "excelDataGuide")
+data <- read_data(datafile, guidefile)
 ```
 
 The output of the `read_data()` function is a list object containing the data in a structured manner. The structure is determined for a large part by the design of the data guide.

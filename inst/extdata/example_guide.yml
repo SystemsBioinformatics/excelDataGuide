@@ -1,20 +1,25 @@
+guide.version: '1.0'
 template.name: competition
-template.version:  '9.3'
+template.min.version: '9.3'
+template.max.version: ~
 plate.format: 96
+template.metadata:
+  - varname: template.version
+    sheet: description
+    cell: B2
 locations:
   - sheet: description
     type: keyvalue
-    translate: true
+    translate: yes
     varname: metadata
     ranges:
-      - A2:B2
       - A10:B14
       - A16:B16
       - A18:B18
       - A20:B20
   - sheet: description
     type: keyvalue
-    translate: true
+    translate: yes
     atomicclass: numeric
     varname: metadata
     ranges:
@@ -24,8 +29,8 @@ locations:
       - A21:B21
   - sheet: _data
     type: platedata
-    translate: false
-    varname: platedata
+    translate: no
+    varname: plate
     ranges:
       - A1:M9
       - A11:M19
@@ -39,13 +44,12 @@ locations:
       - A91:M99
   - sheet: _data
     type: table
-    translate: false
+    translate: no
     varname: rejections
-    ranges:
-      - A101:B111
+    ranges: A101:B111
   - sheet: _parameters
     type: keyvalue
-    translate: false
+    translate: no
     varname: parameters
     atomicclass: numeric
     ranges:
@@ -55,25 +59,41 @@ locations:
       - A35:B36
   - sheet: _parameters
     type: keyvalue
-    translate: false
+    translate: no
     varname: parameters
-    ranges:
-      - A39:B39
+    ranges: A39:B39
 translations:
-  File path:             filepath
-  Version:               drt.version
-  Study identifier:      studyID
-  Experiment identifier: exptID
-  Plate identifier:      plateID
-  Run identifier:        runID
-  Instrument identifier: instrID
-  Experimenter name:     experimenter
-  Date of experiment:    date
-  Laboratory identifier: labID
-  Temperature (°C):      temp
-  Item 1:                itm1ID
-  Molar mass 1:          itm1Mw
-  Run identifier 1:      run1ID
-  Item 2:                itm2ID
-  Molar mass 2:          itm2Mw
-  Run identifier 2:      run2ID
+  - long: Version
+    short: template.version
+  - long: Template Name
+    short: template.name
+  - long: Study identifier
+    short: studyID
+  - long: Experiment identifier
+    short: exptID
+  - long: Plate identifier
+    short: plateID
+  - long: Run identifier
+    short: runID
+  - long: Instrument identifier
+    short: instrID
+  - long: Experimenter name
+    short: experimenter
+  - long: Date of experiment
+    short: date
+  - long: Laboratory identifier
+    short: labID
+  - long: Temperature (°C)
+    short: temp
+  - long: Item 1
+    short: itm1ID
+  - long: Molar mass 1
+    short: itm1Mw
+  - long: Run identifier 1
+    short: run1ID
+  - long: Item 2
+    short: itm2ID
+  - long: Molar mass 2
+    short: itm2Mw
+  - long: Run identifier 2
+    short: run2ID

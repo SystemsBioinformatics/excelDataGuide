@@ -39,21 +39,9 @@ in the guide from the Excel file. Here is an example:
 
 ``` r
 library(excelDataGuide)
-guide <- read_guide(system.file("extdata", "example_guide.yml", package = "excelDataGuide"))
-#> Warning: Unknown or uninitialised column: `long`.
-#> Warning: Unknown or uninitialised column: `short`.
-#> Unknown or uninitialised column: `short`.
-#> Warning: Unknown or uninitialised column: `long`.
-data <- read_data(system.file("extdata", "example_data.xlsx", package = "excelDataGuide"), guide)
-#> Warning: Missing translations. Using original long names.
-#> Warning: Missing translations. Using original long names.
-#> Missing translations. Using original long names.
-#> Missing translations. Using original long names.
-#> Missing translations. Using original long names.
-#> Missing translations. Using original long names.
-#> Missing translations. Using original long names.
-#> Missing translations. Using original long names.
-#> Missing translations. Using original long names.
+datafile <- system.file("extdata", "example_data.xlsx", package = "excelDataGuide")
+guidefile <- system.file("extdata", "example_guide.yml", package = "excelDataGuide")
+data <- read_data(datafile, guidefile)
 ```
 
 The output of the `read_data()` function is a list object containing the
