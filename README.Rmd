@@ -30,7 +30,7 @@ You can install the development version of excelDataGuide from [GitHub](https://
 
 ``` r
 # install.packages("pak")
-pak::pak("douwe/excelDataGuide")
+pak::pak("SystemsBioinformatics/excelDataGuide")
 ```
 
 ## Example
