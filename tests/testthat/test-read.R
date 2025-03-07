@@ -55,8 +55,6 @@ test_that("Function read_data works", {
   expect_no_error(read_data(drfile = test_path('testdata/test1.xlsx'), guide = test_path("testdata/guide_competition_1_0.yml")))
 })
 
-
-# TODO: create good guides programmatically and test them
 test_that("Function read_data using guide with two plates returns two plates", {
   # guide <- read_guide(test_path("testdata/goodguides/guide_with_two_plates.yml"))
   # result <- read_data(drfile = test_path('testdata/test1.xlsx'), guide = guide)
