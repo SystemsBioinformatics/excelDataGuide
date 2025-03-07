@@ -35,7 +35,7 @@ pak::pak("SystemsBioinformatics/excelDataGuide")
 
 ## Example
 
-The basic usage of the package only requires two commands: reading (and checking) the guide file and subsequently reading all data pointed out in the guide from the Excel file. Here is an example:
+The basic usage of the package only requires one command with two file paths: the path to the Excel data file and the path to the data guide file. Here is an example:
 
 ```{r example}
 library(excelDataGuide)
