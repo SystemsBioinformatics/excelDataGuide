@@ -96,18 +96,18 @@ short_to_longnames <- function(v, translations) {
 #'
 #' @param drfile Path to the data reporting file
 #' @param guide A reporting template guide object or a path to a guide file
-#' @param checkversion Whether to check the version of the guide against that of the template
 #' @param checkname Whether to check the name of the guide against that of the template
 #' @description
 #' Read all data from a spreadsheet according to a reporting template guide. The
 #' data will be returned as a list with the optional elements keyvalue, table and
-#' platedata if defined in the guide. The name and version of the guide must
-#' match that of the template in which the data were recorded when cheking is
-#' activated.
+#' platedata if defined in the guide. The minimal and maximal template versions
+#' of the guide mustbe compatible with that of the template in which the data
+#' were recorded. Furthermore, the name of the template must match the template
+#' name in the guide when when `checkname` is `TRUE`.
 #' @return A list with up to three elements
 #' @export
 #'
-read_data <- function(drfile, guide, checkversion = FALSE, checkname = FALSE) {
+read_data <- function(drfile, guide, checkname = FALSE) {
 
   if (inherits(guide, "character")) {
     # If 'guide' is a file path then read the guide
@@ -153,17 +153,15 @@ read_data <- function(drfile, guide, checkversion = FALSE, checkname = FALSE) {
     }
   }
 
-  if (checkversion) {
-    num.template.version <- package_version(result$template.metadata$template.version)
-    num.min.version <- package_version(guide$template.min.version)
-    if (num.template.version < num.min.version) {
-       rlang::abort(glue::glue("The guide is incompatible with the template. The template version should be minimally {guide$template.min.version}, whereas it is {result$template.metadata$template.version})."))
-    }
-    if (!is.null(guide$template.min.version)) {
-      num.max.version <- package_version(guide$template.min.version)
-      if (num.max.version < num.template.version) {
-        rlang::abort(glue::glue("The guide is incompatible with the template. The template version should be maximally {guide$template.max.version}, whereas it is {result$template.metadata$template.version})."))
-      }
+  num.template.version <- package_version(result$template.metadata$template.version)
+  num.min.version <- package_version(guide$template.min.version)
+  if (num.template.version < num.min.version) {
+     rlang::abort(glue::glue("The guide is incompatible with the template. The template version should be minimally {guide$template.min.version}, whereas it is {result$template.metadata$template.version})."))
+  }
+  if (!is.null(guide$template.min.version)) {
+    num.max.version <- package_version(guide$template.min.version)
+    if (num.max.version < num.template.version) {
+      rlang::abort(glue::glue("The guide is incompatible with the template. The template version should be maximally {guide$template.max.version}, whereas it is {result$template.metadata$template.version})."))
     }
   }
 
