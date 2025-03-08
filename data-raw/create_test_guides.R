@@ -8,7 +8,11 @@ source <- yaml::read_yaml(file.path("data-raw", sourcename))
 # write the source file to the testdata folder
 yaml::write_yaml(source, file.path("tests/testthat/testdata", targetname), indent.mapping.sequence = TRUE)
 
-get_element_index <- function(s,x) {
+# Take a list s and a list of index numbers and/or names x and return
+# a vector of index numbers in list s correspond to the index names and or
+# numbers. The vector of index numbers can be used in the expression
+# "s[[indexnrs]]" to descend into s.
+get_element_index <- function(s, x) {
   indexnrs <- c()
   for (ind in x) {
     if (is.numeric(ind)) {
@@ -34,11 +38,28 @@ modifications <- list(
     valid = FALSE
   ),
   list(
+    # Incompatible version
+    element = list("template.min.version"),
+    value = "9.4",
+    file = "conflicting_min_version.yml",
+    checkby = "testthat",
+    valid = TRUE
+  ),
+  list(
     # Non-null maximal version number
     element = list("template.max.version"),
     value = "10.1",
     file = "maximal_version.yml",
     checkby = "schema",
+    valid = TRUE
+  ),
+  list(
+    # Incompatible version, Note, min. version will be larger than max.version,
+    # but that fact does not yield an error, currently.
+    element = list("template.max.version"),
+    value = "9.2",
+    file = "conflicting_max_version.yml",
+    checkby = "testthat",
     valid = TRUE
   ),
   list(

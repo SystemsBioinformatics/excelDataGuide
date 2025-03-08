@@ -1,9 +1,25 @@
+#' Read a value from a single cell
+#' @param drfile Path to the data reporting file
+#' @param sheet The sheet name
+#' @param cell The address of the spreadsheet cell where the data is found
+#' @param atomicclass The name of the class to which the values should be coerced, if possible
+read_cell <- function(drfile, sheet, cell, atomicclass = 'character') {
+  x <- readxl::read_excel(drfile, sheet = sheet, range = cell, col_names = "value") |>
+    dplyr::pull(value)
+  switch(atomicclass,
+         "character" = as.character(x),
+         "numeric" = as.numeric(x),
+         "integer" = as.integer(x),
+         "logical" = as.logical(x))
+}
+
 #' Read keyvalue pair formatted data from a spreadsheet
 #' @param drfile Path to the data reporting file
 #' @param sheet The sheet name
 #' @param range The range of the data
 #' @param translate Whether to translate long variable names to short variable names
 #' @param translations A named vector with long variable names as names and short variable names as values
+#' @param atomicclass The name of the class to which the values should be coerced, if possible
 #' @return A named list. Values are coerced to character
 #' @noRd
 #'
@@ -153,15 +169,22 @@ read_data <- function(drfile, guide, checkname = FALSE) {
     }
   }
 
+  for (item in guide$template.metadata) {
+    atomicclass <- if ("atomicclass" %in% names(item)) item$atomicclass else "character"
+    result$template.metadata[[item$varname]] <- read_cell(drfile, sheet = item$sheet, cell = item$cell, atomicclass = atomicclass)
+  }
+
   num.template.version <- package_version(result$template.metadata$template.version)
   num.min.version <- package_version(guide$template.min.version)
   if (num.template.version < num.min.version) {
-     rlang::abort(glue::glue("The guide is incompatible with the template. The template version should be minimally {guide$template.min.version}, whereas it is {result$template.metadata$template.version})."))
+     rlang::abort(glue::glue("The guide is incompatible with the template.
+                             The template version should be minimally {guide$template.min.version}, whereas it is {result$template.metadata$template.version}."))
   }
-  if (!is.null(guide$template.min.version)) {
-    num.max.version <- package_version(guide$template.min.version)
+  if (!is.null(guide$template.max.version)) {
+    num.max.version <- package_version(guide$template.max.version)
     if (num.max.version < num.template.version) {
-      rlang::abort(glue::glue("The guide is incompatible with the template. The template version should be maximally {guide$template.max.version}, whereas it is {result$template.metadata$template.version})."))
+      rlang::abort(glue::glue("The guide is incompatible with the template.
+                              The template version should be maximally {guide$template.max.version}, whereas it is {result$template.metadata$template.version}."))
     }
   }
 

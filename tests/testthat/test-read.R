@@ -67,4 +67,10 @@ test_that("Function read_data using guide split table returns single table", {
   # expect_equal(length(result$table), 1)
 })
 
+test_that("Version incompatibilities yield an error.", {
+  guide <- read_guide(test_path("testdata/erroneousguides/conflicting_min_version.yml"))
+  expect_error(read_data(drfile = test_path('testdata/test1.xlsx'), guide = guide))
+  guide <- read_guide(test_path("testdata/erroneousguides/conflicting_max_version.yml"))
+  expect_error(read_data(drfile = test_path('testdata/test1.xlsx'), guide = guide))
+})
 
