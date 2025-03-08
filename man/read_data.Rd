@@ -4,14 +4,12 @@
 \alias{read_data}
 \title{Read all data from a spreadsheet}
 \usage{
-read_data(drfile, guide, checkversion = FALSE, checkname = FALSE)
+read_data(drfile, guide, checkname = FALSE)
 }
 \arguments{
 \item{drfile}{Path to the data reporting file}
 
 \item{guide}{A reporting template guide object or a path to a guide file}
-
-\item{checkversion}{Whether to check the version of the guide against that of the template}
 
 \item{checkname}{Whether to check the name of the guide against that of the template}
 }
@@ -21,7 +19,8 @@ A list with up to three elements
 \description{
 Read all data from a spreadsheet according to a reporting template guide. The
 data will be returned as a list with the optional elements keyvalue, table and
-platedata if defined in the guide. The name and version of the guide must
-match that of the template in which the data were recorded when cheking is
-activated.
+platedata if defined in the guide. The minimal and maximal template versions
+of the guide mustbe compatible with that of the template in which the data
+were recorded. Furthermore, the name of the template must match the template
+name in the guide when when \code{checkname} is \code{TRUE}.
 }

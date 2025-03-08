@@ -13,27 +13,8 @@ read_guide(path)
 A list object with the guide data
 }
 \description{
-A spreadsheet guide is a YAML file that contains the following elements:
-\itemize{
-\item template.name: The name of the template
-\item template.version: The version of the template
-\item plate.format: The format of the microplate (24, 48, 96 or 384)
-\item locations: A list of locations in the spreadsheet
-\item translations: A list of translations
-}
-
-Each location in the spreadsheet contains the following elements:
-\itemize{
-\item sheet: The name of the sheet
-\item type: The type of the data ('table', 'keyvalue' or 'platedata')
-\item varname: The name of the variable under which it will be stored when read
-\item ranges: A list of ranges
-}
-
-The path to the excel data file that is read will be stored in the variable
-\code{sourcefile}, corresponding to the 'short' name in a translation table. If
-you do not add a 'long' name for this variable in the translation table then
-'File path' will be automatically added to a translation table if it is
-present. This also means that the 'long' variable 'File path' is reserved for
-this 'short' name exclusively.
+A spreadsheet guide is a YAML file that contains directions to where data
+can be found in a spreadsheet. For an extensive description of this file
+type, as well as instructions how to create and test the validity, please
+see the vignettes.
 }

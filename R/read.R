@@ -3,9 +3,11 @@
 #' @param sheet The sheet name
 #' @param cell The address of the spreadsheet cell where the data is found
 #' @param atomicclass The name of the class to which the values should be coerced, if possible
+#' @noRd
+#'
 read_cell <- function(drfile, sheet, cell, atomicclass = 'character') {
   x <- readxl::read_excel(drfile, sheet = sheet, range = cell, col_names = "value") |>
-    dplyr::pull(value)
+    dplyr::pull("value")
   switch(atomicclass,
          "character" = as.character(x),
          "numeric" = as.numeric(x),
