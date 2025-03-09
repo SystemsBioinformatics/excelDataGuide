@@ -17,6 +17,7 @@ locations:
       - A16:B16
       - A18:B18
       - A20:B20
+      - A24:B25
   - sheet: description
     type: invalidtype
     translate: true

@@ -10,16 +10,17 @@ template.metadata:
 locations:
   - sheet: description
     type: keyvalue
-    translate: yes
+    translate: true
     varname: metadata
     ranges:
       - A10:B14
       - A16:B16
       - A18:B18
       - A20:B20
+      - A24:B25
   - sheet: description
     type: keyvalue
-    translate: yes
+    translate: true
     atomicclass: numeric
     varname: metadata
     ranges:
@@ -29,7 +30,7 @@ locations:
       - A21:B21
   - sheet: _data
     type: platedata
-    translate: no
+    translate: false
     varname: plate
     ranges:
       - A1:M9
@@ -44,12 +45,13 @@ locations:
       - A91:M99
   - sheet: _data
     type: table
-    translate: no
+    translate: false
     varname: rejections
-    ranges: A101:B111
+    ranges:
+      - A101:B111
   - sheet: _parameters
     type: keyvalue
-    translate: no
+    translate: false
     varname: parameters
     atomicclass: numeric
     ranges:
@@ -59,9 +61,10 @@ locations:
       - A35:B36
   - sheet: _parameters
     type: keyvalue
-    translate: no
+    translate: false
     varname: parameters
-    ranges: A39:B39
+    ranges:
+      - A39:B39
 translations:
   - long: Version
     short: template.version
