@@ -13,7 +13,7 @@
 read_cells <- function(drfile, sheet, range, varnames, translate = FALSE, translations = NULL, atomicclass = 'character') {
   # TODO: throw error when cells is an array
   # TODO: throw error when cell range is incompatible with length of varnames
-  x <- readxl::read_excel(drfile, sheet = sheet, range = range, col_names = FALSE)
+  x <- suppressMessages(readxl::read_excel(drfile, sheet = sheet, range = range, col_names = FALSE))
   if (nrow(x) == 0) {
     x <- setNames(as.list(rep(NA, length(varnames))), varnames)
   } else {
@@ -159,7 +159,7 @@ read_data <- function(drfile, guide, checkname = FALSE) {
 
   result <- list("keyvalue" = list(), "table" = list(), "platedata" = list())
 
-  for (location in c(guide$template.metadata, guide$locations)) {
+  for (location in guide$locations) {
     read_function <- switch(
       location$type,
       "keyvalue" = read_keyvalue,
@@ -168,11 +168,7 @@ read_data <- function(drfile, guide, checkname = FALSE) {
       "cells" = read_cells
     )
 
-    if ('variables' %in% names(location)) {
-      varnames <- location$variables
-    } else {
-      varnames <- NULL
-    }
+    varnames <- if ('variables' %in% names(location)) location$variables else NULL
 
     atomicclass <- if ("atomicclass" %in% names(location)) location$atomicclass else "character"
     chunks <- lapply(location$ranges, function(range) {
@@ -196,24 +192,24 @@ read_data <- function(drfile, guide, checkname = FALSE) {
         "keyvalue" = c(result[[location$type]][[location$varname]], chunk),
         "table" = dplyr::bind_rows(result[[location$type]][[location$varname]], chunk),
         "platedata" = suppressMessages(dplyr::full_join(result[[location$type]][[location$varname]], chunk)),
-        "cells" = c(result[["keyvalue"]][[location$varname]], chunk),
+        "cells" = c(result[[location$type]][[location$varname]], chunk),
       )
     }
   }
 
-  # num.template.version <- package_version(result$template.metadata$template.version)
-  # num.min.version <- package_version(guide$template.min.version)
-  # if (num.template.version < num.min.version) {
-  #    rlang::abort(glue::glue("The guide is incompatible with the template.
-  #                            The template version should be minimally {guide$template.min.version}, whereas it is {result$template.metadata$template.version}."))
-  # }
-  # if (!is.null(guide$template.max.version)) {
-  #   num.max.version <- package_version(guide$template.max.version)
-  #   if (num.max.version < num.template.version) {
-  #     rlang::abort(glue::glue("The guide is incompatible with the template.
-  #                             The template version should be maximally {guide$template.max.version}, whereas it is {result$template.metadata$template.version}."))
-  #   }
-  # }
+  num.template.version <- package_version(result$cells$.template$version)
+  num.min.version <- package_version(guide$template.min.version)
+  if (num.template.version < num.min.version) {
+     rlang::abort(glue::glue("The guide is incompatible with the template.
+                             The template version should be minimally {guide$template.min.version}, whereas it is {result$template.metadata$template.version}."))
+  }
+  if (!is.null(guide$template.max.version)) {
+    num.max.version <- package_version(guide$template.max.version)
+    if (num.max.version < num.template.version) {
+      rlang::abort(glue::glue("The guide is incompatible with the template.
+                              The template version should be maximally {guide$template.max.version}, whereas it is {result$template.metadata$template.version}."))
+    }
+  }
 
   if (checkname) {
     if (guide$template.name != result$template.metadata$template.name) {
