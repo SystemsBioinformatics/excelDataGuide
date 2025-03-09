@@ -11,8 +11,15 @@
 #' @noRd
 #'
 read_cells <- function(drfile, sheet, range, varnames, translate = FALSE, translations = NULL, atomicclass = 'character') {
-  # TODO: throw error when cells is an array
-  # TODO: throw error when cell range is incompatible with length of varnames
+  range.dim <- dim(cellranger::as.cell_limits(range))
+  if (all(range.dim > 1)) {
+    rlang::abort(glue::glue("A cell range should be a single cell, a row of cells or a column of cells.
+                            The range {range} is an array of cells."))
+  }
+  # TODO: move this check to read_guide
+  # if (range.dim[range.dim > 1] != length(varnames)) {
+  #   rlang::abort(glue::glue("The length of the range ({range.dim[range.dim > 1]}) differs from the number of variables given ({length(varnames)})."))
+  # }
   x <- suppressMessages(readxl::read_excel(drfile, sheet = sheet, range = range, col_names = FALSE))
   if (nrow(x) == 0) {
     x <- setNames(as.list(rep(NA, length(varnames))), varnames)
