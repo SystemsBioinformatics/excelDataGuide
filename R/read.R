@@ -1,18 +1,38 @@
 #' Read a value from a single cell
 #' @param drfile Path to the data reporting file
 #' @param sheet The sheet name
-#' @param cell The address of the spreadsheet cell where the data is found
+#' @param cells The addresses of the spreadsheet cell where the data is found.
+#' @param variablenames The keys to be used for the values
 #' @param atomicclass The name of the class to which the values should be coerced, if possible
+#' @description
+#' The cells must be either a row or a column of cells, not an array!
+#'
+#' @return A named list
 #' @noRd
 #'
-read_cell <- function(drfile, sheet, cell, atomicclass = 'character') {
-  x <- readxl::read_excel(drfile, sheet = sheet, range = cell, col_names = "value") |>
-    dplyr::pull("value")
-  switch(atomicclass,
-         "character" = as.character(x),
-         "numeric" = as.numeric(x),
-         "integer" = as.integer(x),
-         "logical" = as.logical(x))
+read_cells <- function(drfile, sheet, range, varnames, translate = FALSE, translations = NULL, atomicclass = 'character') {
+  # TODO: throw error when cells is an array
+  # TODO: throw error when cell range is incompatible with length of varnames
+  x <- readxl::read_excel(drfile, sheet = sheet, range = range, col_names = FALSE)
+  if (nrow(x) == 0) {
+    x <- setNames(as.list(rep(NA, length(varnames))), varnames)
+  } else {
+    if (length(x) > 1) {
+      # we have a row of values
+      x <- as.list(x)
+    } else {
+      # we have a column of values
+      x <- as.list(dplyr::pull(x, 1))
+    }
+    x <- setNames(x, varnames)
+  }
+  lapply(x, function(y) {
+    switch(atomicclass,
+           "character" = as.character(y),
+           "numeric" = as.numeric(y),
+           "integer" = as.integer(y),
+           "logical" = as.logical(y))
+  })
 }
 
 #' Read keyvalue pair formatted data from a spreadsheet
@@ -25,7 +45,7 @@ read_cell <- function(drfile, sheet, cell, atomicclass = 'character') {
 #' @return A named list. Values are coerced to character
 #' @noRd
 #'
-read_keyvalue <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character") {
+read_keyvalue <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
   keyvalue <- readxl::read_excel(drfile, sheet = sheet, range = range, col_names = c("key", "value"))
   if (translate) {
     keyvalue$key <- long_to_shortnames(keyvalue$key, translations)
@@ -47,7 +67,7 @@ read_keyvalue <- function(drfile, sheet, range, translate = FALSE, translations 
 #' @return A data frame in long format
 #' @noRd
 #'
-read_table <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character") {
+read_table <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
   tbl <- readxl::read_excel(drfile, sheet = sheet, range = range)
   if (translate) {
     names(tbl) <- long_to_shortnames(names(tbl), translations)
@@ -76,7 +96,7 @@ plate_to_df <- function(d) {
 #' @inherit read_keyvalue
 #' @return A data frame in long format
 #' @noRd
-read_key_plate <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character") {
+read_key_plate <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
   plate <- readxl::read_excel(drfile, sheet = sheet, range = range)
   plate_to_df(plate)
 }
@@ -139,24 +159,30 @@ read_data <- function(drfile, guide, checkname = FALSE) {
 
   result <- list("keyvalue" = list(), "table" = list(), "platedata" = list())
 
-  for (location in guide$locations) {
+  for (location in c(guide$template.metadata, guide$locations)) {
     read_function <- switch(
       location$type,
       "keyvalue" = read_keyvalue,
       "table" = read_table,
-      "platedata" = read_key_plate
+      "platedata" = read_key_plate,
+      "cells" = read_cells
     )
 
     atomicclass <- if ("atomicclass" %in% names(location)) location$atomicclass else "character"
     chunks <- lapply(location$ranges, function(range) {
-      read_function(drfile, location$sheet, range, location$translate, guide$translations, atomicclass)
+      d <- read_function(drfile, location$sheet, range, location$translate, guide$translations, atomicclass)
+      if (location$type == "cells") {
+        d <- setNames(d, location$variables)
+      }
+      d
     })
 
     chunk <- switch(
       location$type,
       "keyvalue" = do.call(c, chunks),
       "table" = dplyr::bind_rows(chunks),
-      "platedata" = suppressMessages(Reduce(dplyr::full_join, chunks))
+      "platedata" = suppressMessages(Reduce(dplyr::full_join, chunks)),
+      "cells" = do.call(c, chunks)
     )
 
     if (!(location$varname %in% names(result[[location$type]]))) {
@@ -166,29 +192,25 @@ read_data <- function(drfile, guide, checkname = FALSE) {
         location$type,
         "keyvalue" = c(result[[location$type]][[location$varname]], chunk),
         "table" = dplyr::bind_rows(result[[location$type]][[location$varname]], chunk),
-        "platedata" = suppressMessages(dplyr::full_join(result[[location$type]][[location$varname]], chunk))
+        "platedata" = suppressMessages(dplyr::full_join(result[[location$type]][[location$varname]], chunk)),
+        "cells" = c(result[["keyvalue"]][[location$varname]], chunk),
       )
     }
   }
 
-  for (item in guide$template.metadata) {
-    atomicclass <- if ("atomicclass" %in% names(item)) item$atomicclass else "character"
-    result$template.metadata[[item$varname]] <- read_cell(drfile, sheet = item$sheet, cell = item$cell, atomicclass = atomicclass)
-  }
-
-  num.template.version <- package_version(result$template.metadata$template.version)
-  num.min.version <- package_version(guide$template.min.version)
-  if (num.template.version < num.min.version) {
-     rlang::abort(glue::glue("The guide is incompatible with the template.
-                             The template version should be minimally {guide$template.min.version}, whereas it is {result$template.metadata$template.version}."))
-  }
-  if (!is.null(guide$template.max.version)) {
-    num.max.version <- package_version(guide$template.max.version)
-    if (num.max.version < num.template.version) {
-      rlang::abort(glue::glue("The guide is incompatible with the template.
-                              The template version should be maximally {guide$template.max.version}, whereas it is {result$template.metadata$template.version}."))
-    }
-  }
+  # num.template.version <- package_version(result$template.metadata$template.version)
+  # num.min.version <- package_version(guide$template.min.version)
+  # if (num.template.version < num.min.version) {
+  #    rlang::abort(glue::glue("The guide is incompatible with the template.
+  #                            The template version should be minimally {guide$template.min.version}, whereas it is {result$template.metadata$template.version}."))
+  # }
+  # if (!is.null(guide$template.max.version)) {
+  #   num.max.version <- package_version(guide$template.max.version)
+  #   if (num.max.version < num.template.version) {
+  #     rlang::abort(glue::glue("The guide is incompatible with the template.
+  #                             The template version should be maximally {guide$template.max.version}, whereas it is {result$template.metadata$template.version}."))
+  #   }
+  # }
 
   if (checkname) {
     if (guide$template.name != result$template.metadata$template.name) {

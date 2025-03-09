@@ -45,6 +45,11 @@ test_that("reading multiple key-value pairs works", {
                              translations = guide$translations), expected_result)
 })
 
+test_that("Reading cells works", {
+  expect_no_error(read_cells(drfile = test_path('testdata/test1.xlsx'), sheet = 'concentration response', range = "J4:M4",
+                             varnames = c('RFU.min','RFU.max','IC50','Hill')))
+})
+
 test_that("reading a table works", {
   expect_no_error(read_table(drfile = test_path('testdata/test1.xlsx'), sheet = '_data', range = "A101:B111"))
 })
@@ -54,6 +59,7 @@ test_that("Function read_data works", {
   expect_no_error(read_data(drfile = test_path('testdata/test1.xlsx'), guide = guide))
   expect_no_error(read_data(drfile = test_path('testdata/test1.xlsx'), guide = test_path("testdata/guide_competition_1_0.yml")))
 })
+
 
 test_that("Function read_data using guide with two plates returns two plates", {
   # guide <- read_guide(test_path("testdata/goodguides/guide_with_two_plates.yml"))
