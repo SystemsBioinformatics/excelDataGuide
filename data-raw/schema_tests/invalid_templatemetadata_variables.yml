@@ -4,7 +4,12 @@ template.min.version: '9.3'
 template.max.version: ~
 plate.format: 96
 template.metadata:
-  - A2:B2
+  - sheet: description
+    type: cells
+    varname: template
+    translate: false
+    cells:
+      - B2
 locations:
   - sheet: description
     type: keyvalue

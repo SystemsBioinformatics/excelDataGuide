@@ -8,16 +8,17 @@ source <- yaml::read_yaml(file.path("data-raw", sourcename))
 # Modified yaml write function
 write_yaml_mod <- function(x, file) {
   yaml::write_yaml(x, file, indent.mapping.sequence = TRUE, handlers = list(logical = yaml::verbatim_logical))
-  # Correct ranges singletons that were converted to string instead of array
-  # There seems to be no other way since R does not distinguish singletons from
+  # Correct ranges or cells singletons that were converted to string instead of
+  # array. There is no other way since R does not distinguish singletons from
   # single values.
   txt <- readLines(file)
   newtxt <- c()
   for (line in txt) {
-    if (any(stringr::str_detect(line, "ranges: .+$"))) {
-      space <- stringr::str_extract(line, "(\\s+)ranges:\\s+(.+)$", group=1)
-      value <- stringr::str_extract(line, "(\\s+)ranges:\\s+(.+)$", group=2)
-      newtxt <- c(newtxt, paste0(space,"ranges:"))
+    if (any(stringr::str_detect(line, "(ranges|cells): .+$"))) {
+      space <- stringr::str_extract(line, "(\\s+)(ranges:|cells:)\\s+(.+)$", group=1)
+      label <- stringr::str_extract(line, "(\\s+)(ranges:|cells:)\\s+(.+)$", group=2)
+      value <- stringr::str_extract(line, "(\\s+)(ranges:|cells:)\\s+(.+)$", group=3)
+      newtxt <- c(newtxt, paste0(space, label))
       newtxt <- c(newtxt, paste0(space, "  - ", value))
     } else {
       newtxt <- c(newtxt, line)
@@ -124,19 +125,11 @@ modifications <- list(
     valid = FALSE
   ),
   list(
-    # Invalid template metadata cell specification
-    element = list("template.metadata", 1, "cell"),
-    value = "A2:B2",
-    file = "invalid_templatemetadata_cell.yml",
-    checkby = "schema",
-    valid = FALSE
-  ),
-  list(
-    # Invalid template metadata variable name
-    element = list("template.metadata", 1, "varname"),
-    value  = "invalidname",
-    file = "invalid_templatemetadata_varname.yml",
-    checkby = "schema",
+    # Missing template metadata variables
+    element = list("template.metadata", 1, "variables"),
+    value = NULL,
+    file = "invalid_templatemetadata_variables.yml",
+    checkby = "testthat",
     valid = FALSE
   ),
   list(

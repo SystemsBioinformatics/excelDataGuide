@@ -4,9 +4,13 @@ template.min.version: '9.3'
 template.max.version: ~
 plate.format: 96
 template.metadata:
-  - varname: template.version
-    sheet: description
-    cell: B2
+  - sheet: description
+    type: cells
+    varname: template
+    translate: false
+    variables: version
+    ranges:
+      - B2
 locations:
   - sheet: description
     type: keyvalue
@@ -65,3 +69,27 @@ locations:
     varname: parameters
     ranges:
       - A39:B39
+  - sheet: concentration response
+    type: cells
+    translate: false
+    varname: userresults
+    atomicclass: numeric
+    ranges:
+      - J4:M4
+    variables:
+      - itm1.RFUmin
+      - itm1.RFUmax
+      - itm1.IC50
+      - itm1.hill
+  - sheet: concentration response
+    type: cells
+    translate: false
+    varname: userresults
+    atomicclass: numeric
+    ranges:
+      - J5:M5
+    variables:
+      - itm2.RFUmin
+      - itm2.RFUmax
+      - itm2.IC50
+      - itm2.hill

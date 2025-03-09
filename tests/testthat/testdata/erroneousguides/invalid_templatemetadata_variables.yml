@@ -4,7 +4,12 @@ template.min.version: '9.3'
 template.max.version: ~
 plate.format: 96
 template.metadata:
-  - A2:B2
+  - sheet: description
+    type: cells
+    varname: template
+    translate: false
+    ranges:
+      - B2
 locations:
   - sheet: description
     type: keyvalue
@@ -68,7 +73,7 @@ locations:
     translate: false
     varname: userresults
     atomicclass: numeric
-    cells:
+    ranges:
       - J4:M4
     variables:
       - itm1.RFUmin
@@ -80,7 +85,7 @@ locations:
     translate: false
     varname: userresults
     atomicclass: numeric
-    cells:
+    ranges:
       - J5:M5
     variables:
       - itm2.RFUmin
