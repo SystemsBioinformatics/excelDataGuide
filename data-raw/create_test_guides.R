@@ -5,8 +5,29 @@ targetname <- "guide_competition_1_0.yml"
 
 source <- yaml::read_yaml(file.path("data-raw", sourcename))
 
+# Modified yaml write function
+write_yaml_mod <- function(x, file) {
+  yaml::write_yaml(x, file, indent.mapping.sequence = TRUE, handlers = list(logical = yaml::verbatim_logical))
+  # Correct ranges singletons that were converted to string instead of array
+  # There seems to be no other way since R does not distinguish singletons from
+  # single values.
+  txt <- readLines(file)
+  newtxt <- c()
+  for (line in txt) {
+    if (any(stringr::str_detect(line, "ranges: .+$"))) {
+      space <- stringr::str_extract(line, "(\\s+)ranges:\\s+(.+)$", group=1)
+      value <- stringr::str_extract(line, "(\\s+)ranges:\\s+(.+)$", group=2)
+      newtxt <- c(newtxt, paste0(space,"ranges:"))
+      newtxt <- c(newtxt, paste0(space, "  - ", value))
+    } else {
+      newtxt <- c(newtxt, line)
+    }
+  }
+  writeLines(newtxt, file)
+}
+
 # write the source file to the testdata folder
-yaml::write_yaml(source, file.path("tests/testthat/testdata", targetname), indent.mapping.sequence = TRUE)
+write_yaml_mod(source, file.path("tests/testthat/testdata", targetname))
 
 # Take a list s and a list of index numbers and/or names x and return
 # a vector of index numbers in list s correspond to the index names and or
@@ -157,24 +178,7 @@ lapply(modifications, function(x) {
     fp <- file.path("tests/testthat/testdata/erroneousguides", x$file)
     writeLines(paste0("pajv test -s excelguide_schema.json -d ", file.path('../tests/testthat/testdata/erroneousguides', x$file) ,validationresult), script)
   }
-  yaml::write_yaml(s, fp, indent.mapping.sequence = TRUE,
-                   handlers = list(logical = yaml::verbatim_logical))
-  # Correct ranges singletons that were converted to string instead of array
-  # There seems to be no other way since R does not distinguish singletons from
-  # single values.
-  txt <- readLines(fp)
-  newtxt <- c()
-  for (line in txt) {
-    if (any(stringr::str_detect(line, "ranges: .+$"))) {
-      space <- stringr::str_extract(line, "(\\s+)ranges:\\s+(.+)$", group=1)
-      value <- stringr::str_extract(line, "(\\s+)ranges:\\s+(.+)$", group=2)
-      newtxt <- c(newtxt, paste0(space,"ranges:"))
-      newtxt <- c(newtxt, paste0(space, "  - ", value))
-    } else {
-      newtxt <- c(newtxt, line)
-    }
-  }
-  writeLines(newtxt, fp)
+  write_yaml_mod(s, fp)
 })
 close(script)
 
