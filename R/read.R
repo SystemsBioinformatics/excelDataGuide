@@ -168,13 +168,16 @@ read_data <- function(drfile, guide, checkname = FALSE) {
       "cells" = read_cells
     )
 
+    if ('variables' %in% names(location)) {
+      varnames <- location$variables
+    } else {
+      varnames <- NULL
+    }
+
     atomicclass <- if ("atomicclass" %in% names(location)) location$atomicclass else "character"
     chunks <- lapply(location$ranges, function(range) {
-      d <- read_function(drfile, location$sheet, range, location$translate, guide$translations, atomicclass)
-      if (location$type == "cells") {
-        d <- setNames(d, location$variables)
-      }
-      d
+      read_function(drfile = drfile, sheet = location$sheet, range = range, translate = location$translate,
+                         translations = guide$translations, atomicclass = atomicclass, varnames = varnames)
     })
 
     chunk <- switch(

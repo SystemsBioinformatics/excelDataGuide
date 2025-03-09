@@ -1,16 +1,15 @@
-guide.version: '1.0'
 template.name: competition
 template.min.version: '9.3'
 template.max.version: ~
 plate.format: 96
-template.metadata:
+locations:
   - sheet: description
     type: cells
-    varname: template
+    varname: .template
     translate: false
+    variables: version
     ranges:
       - B2
-locations:
   - sheet: description
     type: keyvalue
     translate: true

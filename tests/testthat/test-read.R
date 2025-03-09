@@ -46,8 +46,7 @@ test_that("reading multiple key-value pairs works", {
 })
 
 test_that("Reading cells works", {
-  expect_no_error(read_cells(drfile = test_path('testdata/test1.xlsx'), sheet = 'concentration response', range = "J4:M4",
-                             varnames = c('RFU.min','RFU.max','IC50','Hill')))
+  expect_no_error(read_cells(drfile = test_path('testdata/test1.xlsx'), sheet = 'concentration response', range = "J4:M4", varnames = c('RFU.min','RFU.max','IC50','Hill')))
 })
 
 test_that("reading a table works", {

@@ -3,14 +3,6 @@ template.name: competition
 template.min.version: '9.3'
 template.max.version: ~
 plate.format: 96
-template.metadata:
-  - sheet: description
-    type: cells
-    varname: template
-    translate: false
-    variables: version
-    ranges:
-      - B2
 translations:
   - long: Version
     short: template.version

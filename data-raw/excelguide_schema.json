@@ -26,7 +26,6 @@
       "description": "Microplate format",
       "enum": [ "24", 24, "48", 48, "96", 96, "384", 384 ]
     },
-    "template.metadata" : { "$ref": "#/definitions/locationarray" },
     "locations": { "$ref": "#/definitions/locationarray" },
     "translations": {
       "type": "array",

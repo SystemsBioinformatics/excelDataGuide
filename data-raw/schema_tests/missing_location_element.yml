@@ -3,19 +3,17 @@ template.name: competition
 template.min.version: '9.3'
 template.max.version: ~
 plate.format: 96
-template.metadata:
+locations:
   - sheet: description
     type: cells
-    varname: template
+    varname: .template
     translate: false
     variables: version
     ranges:
       - B2
-locations:
   - sheet: description
     type: keyvalue
     translate: true
-    varname: metadata
     ranges:
       - A10:B14
       - A16:B16
@@ -26,6 +24,7 @@ locations:
     type: keyvalue
     translate: true
     atomicclass: numeric
+    varname: metadata
     ranges:
       - A15:B15
       - A17:B17
