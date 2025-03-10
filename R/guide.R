@@ -71,6 +71,13 @@ check_guide <- function(guide) {
           required_cols = .plateformats[[as.character(guide$plate.format)]]$cols + 1
         )
       }
+    } else {
+      if (guide$locations[[i]]$type == 'cells') {
+        dims <- dim(cellranger::as.cell_limits(guide$locations[[i]]$ranges[1]))
+        # if (range.dim[range.dim > 1] != length(varnames)) {
+        #   rlang::abort(glue::glue("The length of the range ({range.dim[range.dim > 1]}) differs from the number of variables given ({length(varnames)})."))
+        # }
+      }
     }
   }
 }
