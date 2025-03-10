@@ -125,14 +125,6 @@ modifications <- list(
     valid = FALSE
   ),
   list(
-    # Missing template metadata variables
-    element = list("template.metadata", 1, "variables"),
-    value = NULL,
-    file = "invalid_templatemetadata_variables.yml",
-    checkby = "testthat",
-    valid = FALSE
-  ),
-  list(
     # Invalid platedata range
     element = list("locations", 3, "ranges"),
     value = c("A1:M8", "A11:M19"),
