@@ -27,7 +27,8 @@
       "enum": [ "24", 24, "48", 48, "96", 96, "384", 384 ]
     },
     // TODO: The design will be more solid if we make a separate category for **single** cells
-    // and do not allow a category "cells" with ranges
+    // and do not allow a category "cells" with ranges. The "cells" type should have pairs of
+    // variable names and cell addresses as the basic location entry.
     "locations": { "$ref": "#/definitions/locationarray" },
     "translations": {
       "type": "array",
