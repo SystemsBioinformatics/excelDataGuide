@@ -98,15 +98,9 @@ locations:
     translate: false
     variables:
       - rfu.rc.ref
-    ranges:
-      - C27
-  - sheet: "plate + experiment control"
-    type: cells
-    varname: userresults
-    translate: false
-    variables:
       - rfu.t4.ref
     ranges:
+      - C27
       - C28
 translations:
   - long: Version

@@ -26,6 +26,8 @@
       "description": "Microplate format",
       "enum": [ "24", 24, "48", 48, "96", 96, "384", 384 ]
     },
+    // TODO: The design will be more solid if we make a separate category for **single** cells
+    // and do not allow a category "cells" with ranges
     "locations": { "$ref": "#/definitions/locationarray" },
     "translations": {
       "type": "array",
