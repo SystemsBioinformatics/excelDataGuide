@@ -73,6 +73,34 @@ locations:
     atomicclass: numeric
     ranges:
       - J3:M5
+  - sheet: BGfluo
+    type: cells
+    varname: userchecks
+    translate: false
+    variables: spread.itm1
+    ranges:
+      - G6
+  - sheet: BGfluo
+    type: cells
+    varname: userchecks
+    translate: false
+    variables: spread.itm2
+    ranges:
+      - G33
+  - sheet: plate + experiment control
+    type: cells
+    varname: userresults
+    translate: false
+    variables: rfu.rc.ref
+    ranges:
+      - C27
+  - sheet: plate + experiment control
+    type: cells
+    varname: userresults
+    translate: false
+    variables: rfu.t4.ref
+    ranges:
+      - C28
 translations:
   - long: Version
     short: template.version
