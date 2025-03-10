@@ -46,7 +46,11 @@ test_that("reading multiple key-value pairs works", {
 })
 
 test_that("Reading cells works", {
-  expect_no_error(read_cells(drfile = test_path('testdata/test1.xlsx'), sheet = 'concentration response', range = "J4:M4", varnames = c('RFU.min','RFU.max','IC50','Hill')))
+  variables <- list(list(name = "spread.itm1", cell = "G6"),
+                    list(name = "spread.itm2", cell = "G33"))
+  result <- list(spread.itm1 = "0.0463713477851084", spread.itm2 = "0.0154571159283695")
+  expect_no_error(read_cells(drfile = test_path('testdata/test1.xlsx'), sheet = 'BGfluo', variables = variables))
+  expect_equal(read_cells(drfile = test_path('testdata/test1.xlsx'), sheet = 'BGfluo', variables = variables), result)
 })
 
 test_that("reading a table works", {

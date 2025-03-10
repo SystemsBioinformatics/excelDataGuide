@@ -26,13 +26,19 @@
       "description": "Microplate format",
       "enum": [ "24", 24, "48", 48, "96", 96, "384", 384 ]
     },
-    // TODO: The design will be more solid if we make a separate category for **single** cells
-    // and do not allow a category "cells" with ranges. The "cells" type should have pairs of
-    // variable names and cell addresses as the basic location entry.
-    "locations": { "$ref": "#/definitions/locationarray" },
+    "locations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "anyOf": [
+          { "$ref": "#/definitions/rangelocation" },
+          { "$ref": "#/definitions/celllocation" }
+        ]
+      }
+    },
     "translations": {
       "type": "array",
-      "$comment": "Uniqueness of combinations does not guarantee uniqueness of individual values",
+      // Uniqueness of combinations does not guarantee uniqueness of individual values
       "uniqueItems": true,
       "items": {
         "type": "object",
@@ -53,49 +59,79 @@
     }
   },
   "definitions": {
-    "locationarray" : {
-      "type": "array",
-      "uniqueItems": true,
-      "items": {
-        "type": "object",
-        "required": [ "sheet", "type", "translate", "varname", "ranges" ],
-        "dependentRequired": {
-          // dependentRequired is not implemented in used jsonschema version?
-          // when individual cells are imported they need variable names
-          "cells": ["variables"]
+    "sheet": {
+      "description": "Name of an excel sheet",
+      "type": "string"
+    },
+    "translate": {
+      "description": "Whether to translate keys",
+      "type": "boolean"
+    },
+    "varname": {
+      "description": "Name of the variable under which to store the data",
+      "type": "string"
+    },
+    "atomicclass": {
+      "description": "Interpreted type of data, using R-conventions",
+      "enum": [ "numeric", "character", "integer", "logical" ]
+    },
+    "rangelocation": {
+      "type": "object",
+      "required": [ "sheet", "type", "varname", "translate", "ranges" ],
+      "properties": {
+        "sheet": { "$ref": "#/definitions/sheet" },
+        "type": {
+          "description": "Type of data",
+          "enum": [ "keyvalue", "table", "platedata" ]
         },
-        "properties": {
-          "sheet": {
-            "description": "Name of an excel sheet",
-            "type": "string"
-          },
-          "type": {
-            "description": "Type of data",
-            "enum": [ "keyvalue", "table", "platedata", "cells" ]
-          },
-          "translate": {
-            "description": "Whether to translate keys",
-            "type": "boolean"
-          },
-          "varname": {
-            "description": "Name of the variable under which to store the data",
-            "type": "string"
-          },
-          "ranges": {
-            "description": "An array of ranges",
-            "type": "array",
-            "uniqueItems": true,
-            "items": {
-              "type": "string",
-              "pattern": "^[A-Z]+\\d+(:[A-Z]\\d+)?$"
-            }
-          },
-          "atomicclass": {
-            "description": "Interpreted type of data, using R-conventions",
-            "enum": [ "numeric", "character", "integer", "logical" ]
+        "translate": { "$ref": "#/definitions/translate" },
+        "varname": {  "$ref": "#/definitions/varname"  },
+        "ranges": {
+          "description": "An array of ranges",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]+\\d+(:[A-Z]\\d+)?$"
           }
-        }
+        },
+        "atomicclass": { "$ref": "#/definitions/atomicclass" }
       }
+    },
+    "celllocation" :{
+      "type": "object",
+      "required": [ "sheet", "type", "varname", "translate", "variables" ],
+      "properties": {
+        "sheet": { "$ref": "#/definitions/sheet" },
+        "type": {
+          "description": "Type of data",
+          "enum": [ "cells" ]
+        },
+        "translate": { "$ref": "#/definitions/translate" },
+        "varname": { "$ref": "#/definitions/varname" },
+        "variables": {
+          "description": "An array of variable names and cell locations",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": [ "name", "cell" ],
+            "additionalProperies": false,
+            "properties": {
+              "name": {
+                "description": "Variable name",
+                "type": "string"
+              },
+            "cell": {
+            "description": "Address of a spreadsheet cell",
+            "type": "string",
+            "pattern": "^[A-Z]+\\d+$"
+            }
+          }
+        },
+        "atomicclass": { "$ref": "#/definitions/translate" }
     }
   }
+    }
+}
 }

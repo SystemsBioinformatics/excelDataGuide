@@ -8,9 +8,9 @@ locations:
     type: cells
     varname: .template
     translate: false
-    variables: version
-    ranges:
-      - B2
+    variables:
+      - name: version
+        cell: B2
   - factor
   - sheet: description
     type: keyvalue
@@ -70,30 +70,21 @@ locations:
     type: cells
     varname: userchecks
     translate: false
-    variables: spread.itm1
-    ranges:
-      - G6
-  - sheet: BGfluo
-    type: cells
-    varname: userchecks
-    translate: false
-    variables: spread.itm2
-    ranges:
-      - G33
+    atomicclass: numeric
+    variables:
+      - name: spread.itm1
+        cell: G6
+      - name: spread.itm2
+        cell: G33
   - sheet: plate + experiment control
     type: cells
     varname: userresults
     translate: false
-    variables: rfu.rc.ref
-    ranges:
-      - C27
-  - sheet: plate + experiment control
-    type: cells
-    varname: userresults
-    translate: false
-    variables: rfu.t4.ref
-    ranges:
-      - C28
+    variables:
+      - name: rfu.rc.ref
+        cell: C27
+      - name: rfu.t4.ref
+        cell: C28
 translations:
   - long: Version
     short: template.version

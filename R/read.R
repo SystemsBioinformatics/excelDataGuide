@@ -1,35 +1,28 @@
 #' Read a value from a single cell
 #' @param drfile Path to the data reporting file
 #' @param sheet The sheet name
-#' @param cells The addresses of the spreadsheet cell where the data is found.
-#' @param variablenames The keys to be used for the values
+#' @param cell The addresses of the spreadsheet cell where the data is found
+#' @param varname The key to be used for the value
 #' @param atomicclass The name of the class to which the values should be coerced, if possible
-#' @description
-#' The cells must be either a row or a column of cells, not an array!
 #'
 #' @return A named list
 #' @noRd
 #'
-read_cells <- function(drfile, sheet, range, varnames, translate = FALSE, translations = NULL, atomicclass = 'character') {
-  dims <- dim(cellranger::as.cell_limits(range))
-  if (all(dims > 1)) {
-    rlang::abort(glue::glue("A cell range should be a single cell, a row of cells or a column of cells.
-                            The range {range} is an array of cells."))
-  }
-  x <- suppressMessages(readxl::read_excel(drfile, sheet = sheet, range = range, col_names = FALSE))
-  if (nrow(x) == 0) {
-    x <- setNames(as.list(rep(NA, length(varnames))), varnames)
-  } else {
-    if (length(x) > 1) {
-      # we have a row of values
-      x <- as.list(x)
-    } else {
-      # we have a column of values
-      x <- as.list(dplyr::pull(x, 1))
+read_cells <- function(drfile, sheet, variables, translate = FALSE, translations = NULL, atomicclass = 'character') {
+  result <- lapply(variables, function(v) {
+    dims <- dim(cellranger::as.cell_limits(v$cell))
+    if (any(dims > 1)) {
+      rlang::abort(glue::glue("A cell address should point to a single cell."))
     }
-    x <- setNames(x, varnames)
-  }
-  lapply(x, function(y) {
+    x <- suppressMessages(readxl::read_excel(drfile, sheet = sheet, range = v$cell, col_names = FALSE))
+    if (nrow(x) == 0) {
+      x <- NA
+    } else {
+      x <- x[[1]][1]
+    }
+  })
+  result <- setNames(result, sapply(variables, function(x) x$name))
+  lapply(result, function(y) {
     switch(atomicclass,
            "character" = as.character(y),
            "numeric" = as.numeric(y),
@@ -160,31 +153,34 @@ read_data <- function(drfile, guide, checkname = FALSE) {
     }
   }
 
-  result <- list("keyvalue" = list(), "table" = list(), "platedata" = list())
+  result <- list()
 
   for (location in guide$locations) {
     read_function <- switch(
       location$type,
       "keyvalue" = read_keyvalue,
       "table" = read_table,
-      "platedata" = read_key_plate,
-      "cells" = read_cells
+      "platedata" = read_key_plate
     )
 
-    varnames <- if ('variables' %in% names(location)) location$variables else NULL
-
     atomicclass <- if ("atomicclass" %in% names(location)) location$atomicclass else "character"
-    chunks <- lapply(location$ranges, function(range) {
-      read_function(drfile = drfile, sheet = location$sheet, range = range, translate = location$translate,
-                         translations = guide$translations, atomicclass = atomicclass, varnames = varnames)
-    })
+
+    if (!location$type == "cells") {
+      chunks <- lapply(location$ranges, function(range) {
+        read_function(drfile = drfile, sheet = location$sheet, range = range, translate = location$translate,
+                           translations = guide$translations, atomicclass = atomicclass, varnames = varnames)
+      })
+    } else {
+      chunks <- read_cells(drfile = drfile, sheet = location$sheet, variables = location$variables, translate = location$translate,
+                      translations = guide$translations, atomicclass = atomicclass)
+    }
 
     chunk <- switch(
       location$type,
       "keyvalue" = do.call(c, chunks),
       "table" = dplyr::bind_rows(chunks),
       "platedata" = suppressMessages(Reduce(dplyr::full_join, chunks)),
-      "cells" = do.call(c, chunks)
+      "cells" = chunks
     )
 
     if (!(location$varname %in% names(result[[location$type]]))) {
