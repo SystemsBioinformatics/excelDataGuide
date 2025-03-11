@@ -28,19 +28,21 @@ on the same underlying data.
 Concerning calculated data it may or may not be useful to let the spreadsheet be
 the source of such data for the script as well. This may be particularly useful 
 when it concerns calculations that are carried out automatically upon entry
-of data by the user. 
+of data by the user.
 
 Part of these data, like acceptance criteria, is determined in the SOP and fixed
 in the spreadsheet template, whereas other data may vary per experiment and is
-entered by the user.
+entered by the user. For example, when a user performs parameter fitting, it may
+be useful to compare the fitted parameters to those obtained in another 
+programming environment.
 
 To facilitate automatic reading from the spreadsheet by scripts data must be 
-in either of these three formats:
+in either of these four formats:
 
 - **keyvalue** format. Here, the key and value are placed in horizontally 
-adjacent cells. The key is to be used as the parameter name in the
+adjacent cells (columns). The key is to be used as the parameter name in the
 scripts and should conform to variable naming rules for the scripting language
-used. The key is found in th left-most cell of a cell range. The value can be a
+used. The key is found in the left-most cell of a cell range. The value can be a
 single value (one cell) or a vector of values (multiple cells).
 - **platedata** format. Here the data are registered in the same row-column 
 format as the microplate in which the experiment was performed. The first row
@@ -52,9 +54,13 @@ and column in the range could also be empty, except for the variable name.
 - **table** format. This is the format for tabular data where columns represent
 variables and rows represent items in which these variables are assessed. Column
 names are written in the first row.
+- **cell** format. Occasionally it may be more convenient to read values from 
+single cells and provide the keys of the corresponding variables in the data 
+guide.
+ 
 
 The keyvalue format will be mostly used for metadata and parameters. All keyvalue 
-will be aggregated in a single named list.
+will be aggregated in a single named list caled "keyvalue".
 
 The platedata format will be used for measured data and data concerning 
 concentrations in the plate wells. All ranges will be aggregated in a single 
@@ -73,40 +79,56 @@ in the filled out template. This guide is a yaml file.
 This guide is structured as follows:
 
 ```{yaml}
+guide.version: '1.0'
 template.name: competition
-template.version: "9.0"
+template.min.version: '9.3'
+template.max.version: ~
 plate.format: 96
 locations:
-  - sheet: _parameters
-    type: keyvalue
+  - sheet: description
+    type: cells
+    varname: .template
     translate: false
-    varname: metadata
-    ranges: 
-      - A2:B4
-      - A6:B7
-      - A9:D9
-  - sheet: _data
-    type: platedata
-    translate: false
-    varname: platedata
-    ranges: 
-      - A2:K15
-  - sheet: metadata
+    variables:
+      - name: version
+        cell: B2
+  - sheet: description
     type: keyvalue
     translate: true
     varname: metadata
     ranges:
-      - A1:B14
-      - A16:B20
-  - sheet: _data
+      - A10:B14
+      - A16:B16
+      - A18:B18
+      - A20:B20
+      - A24:B25
+  - sheet: concentration response
     type: table
     translate: false
-    varname: rejections
+    varname: userresults
+    atomicclass: numeric
     ranges:
-      - A101:B111
+      - J3:M5
+  - sheet: BGfluo
+    type: cells
+    varname: userchecks
+    translate: false
+    atomicclass: numeric
+    variables:
+      - name: spread.itm1
+        cell: G6
+      - name: spread.itm2
+        cell: G33
 translations:
-  long name 1: shortname1
-  long name 2: shortname2
+  - long: Version
+    short: template.version
+  - long: Template Name
+    short: template.name
+  - long: Study identifier
+    short: studyID
+  - long: Experiment identifier
+    short: exptID
+# remainder not shown
 ```
 
 A guide must contain the following elements:
@@ -143,3 +165,34 @@ The version should correspond to that reported in the template itself,
 otherwise the file or the template is invalid. The user of this package 
 should take care of this check.
 
+## Writing a new guide
+
+### Required elements
+
+- `guide.version`: the version of the guide
+- `template.name`: a name for the template
+- `template.min.version`: The minimal version of the template for which the guide 
+   can be used 
+   with the guide
+- `template.max.version`: The maximal version of the template for which the guide 
+   can be used. *Note that template versions must follow the semantic versioning
+   rukes (https://semver.org) otherwise checking version numbers will 
+   not work.*
+- `locations`: the object containing the data locations
+- `translations`: the object containing the translations of variable names. 
+   Translations can be used both from extended ('long') format to short format 
+   and from short to long format. Two functions are provided by the package to
+   perform these translations *vice versa*.
+
+### Conditionally required element:
+
+- `plate.format` the format of the microplates used for the experiments. This 
+   must be either of '24', '48', '96', or '384'. This is required when a 
+   **platedata** element occurs in the **locations**. Thuis plate format is used
+   to check the correctness of dimensions of the ranges of **platedata** 
+   elements.
+
+### Checking against the json schema
+
+A YAML file can be checked against a JSON schema. We provide a JSON schema
+called `excelguide_schema.json` in the folder `data-raw`

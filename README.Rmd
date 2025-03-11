@@ -45,12 +45,3 @@ data <- read_data(datafile, guidefile)
 ```
 
 The output of the `read_data()` function is a list object containing the data in a structured manner. The structure is determined for a large part by the design of the data guide.
-
-## Three types of data structure
-
-We assume that data structures can be either of three types:
-
-- **Key-value pairs**, where a value is the content of a single cell or of a number of adjacent cells. They correspond to and are stored in R as atomic vectors with a single or multiple values
-- **Tables**, where data is organized in tabular format with variables in columns. This corresponds directly to the `data.frame` in R.
-- **Microplate data**, where values are stored in the same rectangular format as they are read from microplates.
-
