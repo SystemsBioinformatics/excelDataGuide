@@ -175,9 +175,11 @@ should take care of this check.
    can be used 
    with the guide
 - `template.max.version`: The maximal version of the template for which the guide 
-   can be used. *Note that template versions must follow the semantic versioning
-   rukes (https://semver.org) otherwise checking version numbers will 
-   not work.*
+   can be used. *Note that template versions must follow the R package versioning
+   rules otherwise checking version numbers will not work. This implies that 
+   the version should always contain a major and a minor numeric version 
+   separated by a dot. An additional numerical patch version is also allowed. 
+   Hence a version like "2" is invalid, but "2.0" is OK.*
 - `locations`: the object containing the data locations
 - `translations`: the object containing the translations of variable names. 
    Translations can be used both from extended ('long') format to short format 

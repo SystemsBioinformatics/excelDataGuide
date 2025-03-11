@@ -196,7 +196,12 @@ read_data <- function(drfile, guide, checkname = FALSE) {
     }
   }
 
-  num.template.version <- package_version(result$cells$.template$version)
+  template.version <- result$cells$.template$version
+  if (grepl("^\\d+$", template.version)) {
+    template.version <- paste0(template.version, ".0")
+    rlang::warn("The version number ({result$cells$.template$version}) is not correctly formatted. Interpreting as '{template.version}'")
+  }
+  num.template.version <- package_version(template.version)
   num.min.version <- package_version(guide$template.min.version)
   if (num.template.version < num.min.version) {
      rlang::abort(glue::glue("The guide is incompatible with the template.
