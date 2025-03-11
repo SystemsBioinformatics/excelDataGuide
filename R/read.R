@@ -21,7 +21,7 @@ read_cells <- function(drfile, sheet, variables, translate = FALSE, translations
       x <- x[[1]][1]
     }
   })
-  result <- setNames(result, sapply(variables, function(x) x$name))
+  result <- stats::setNames(result, sapply(variables, function(x) x$name))
   lapply(result, function(y) {
     switch(atomicclass,
            "character" = as.character(y),
@@ -168,7 +168,7 @@ read_data <- function(drfile, guide, checkname = FALSE) {
     if (!location$type == "cells") {
       chunks <- lapply(location$ranges, function(range) {
         read_function(drfile = drfile, sheet = location$sheet, range = range, translate = location$translate,
-                           translations = guide$translations, atomicclass = atomicclass, varnames = varnames)
+                           translations = guide$translations, atomicclass = atomicclass)
       })
     } else {
       chunks <- read_cells(drfile = drfile, sheet = location$sheet, variables = location$variables, translate = location$translate,
