@@ -199,8 +199,8 @@ read_data <- function(drfile, guide, checkname = FALSE) {
   template.version <- result$cells$.template$version
   if (grepl("^\\d+$", template.version)) {
     template.version <- paste0(template.version, ".0")
-    rlang::warn(glue::glue("The template version number '{result$cells$.template$version}' is not correctly formatted.
-                           Version numbers must have a minor number. Interpreting as '{template.version}'"))
+    rlang::warn(glue::glue("Incorrect template version number '{result$cells$.template$version}'. Version numbers must have a minor number.
+                            Interpreting '{result$cells$.template$version}' as '{template.version}'"))
   }
   num.template.version <- package_version(template.version)
   num.min.version <- package_version(guide$template.min.version)
