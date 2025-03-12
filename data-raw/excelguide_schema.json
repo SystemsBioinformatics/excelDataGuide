@@ -6,21 +6,20 @@
   "type": "object",
   "required": [ "guide.version", "template.name", "template.min.version", "template.max.version", "locations", "translations" ],
   "properties": {
-    "guide.version": {
-      "description": "Version of the guide",
-      "type": "string"
-    },
+    // version number of the guide
+    "guide.version": { "$ref": "#/definitions/versionnumber" },
     "template.name": {
       "description": "Name of the template",
       "type": "string"
     },
-    "template.min.version": {
-      "description": "Minimal compatible version of the template",
-      "type": "string"
-    },
+    // Minimal compatible version of the template
+    "template.min.version": { "$ref": "#/definitions/versionnumber" },
+    // Maximal compatible version of the template
     "template.max.version": {
-      "description": "Maximal compatible version of the template",
-      "type": [ "string", "null" ]
+      "oneOf": [
+        { "type": "null" },
+        { "$ref": "#/definitions/versionnumber" }
+      ]
     },
     "plate.format": {
       "description": "Microplate format",
@@ -74,6 +73,11 @@
     "atomicclass": {
       "description": "Interpreted type of data, using R-conventions",
       "enum": [ "numeric", "character", "integer", "logical" ]
+    },
+    "versionnumber": {
+      "description": "Version number with at least major and minor number and optional patch number",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$"
     },
     "rangelocation": {
       "type": "object",
@@ -130,8 +134,8 @@
           }
         },
         "atomicclass": { "$ref": "#/definitions/translate" }
+      }
     }
   }
-    }
 }
 }
