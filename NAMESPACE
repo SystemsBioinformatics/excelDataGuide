@@ -2,8 +2,11 @@
 
 export(format_wells)
 export(kvlist_to_table)
+export(long_to_shortnames)
 export(read_data)
 export(read_guide)
 export(rowcol_from_well)
+export(short_to_longnames)
+export(star_to_number)
 export(well_from_rowcol)
 importFrom(rlang,.data)

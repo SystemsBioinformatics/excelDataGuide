@@ -101,7 +101,7 @@ read_key_plate <- function(drfile, sheet, range, translate = FALSE, translations
 #' @param v A vector of long variable names
 #' @param translations A named vector with long variable names as names and short variable names as values
 #' @return A vector of short variable names
-#' @noRd
+#' @export
 long_to_shortnames <- function(v, translations) {
   positions <- match(v, translations$long)
   shortnames <- translations$short[positions]
@@ -115,7 +115,7 @@ long_to_shortnames <- function(v, translations) {
 #' Reverse translate short variable names to long variable names
 #' @inherit long_to_shortnames
 #' @return A vector of long variable names
-#' @noRd
+#' @export
 short_to_longnames <- function(v, translations) {
   positions <- match(v, translations$short)
   longnames <- translations$long[positions]
