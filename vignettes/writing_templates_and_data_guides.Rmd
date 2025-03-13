@@ -20,15 +20,17 @@ library(excelDataGuide)
 
 ## Introduction
 
-Excel is a much used tool in the biochemical laboratory, both to record and to 
-analyze experiments. Often, to save work, we create excel templates when these
-experiments become a routine. When analyzing a lot of these experiments 
-switching to a scripting language like R or Python for analysis will become 
-useful. Also in these cases the excel template is a useful way to structure the
-recording of experimental data and metadata.
+Spreadsheets are a widely used tool in the biochemical laboratory, both to 
+record and to analyze experiments. When such experiments become a routine we 
+often create spreadsheet templates to save time and to structure our work. When
+analyzing a lot of these experiments switching to a scripting language like R or
+Python for analysis will become useful. Also in these cases the spreadsheet template
+is a useful way to structure the recording of experimental data and metadata.
 
-The goal of the excelDataGuide package is to be able to use both spreadsheet 
-and scripts as data analysis tools. 
+The goal of the excelDataGuide package is to be able to use both Excel-compliant 
+spreadsheets and scripts as data analysis tools. Clearly, a scripting language 
+has more potential when it comes to analyzing large data sets, consisting of 
+multiple notebooks.
 
 Importantly, **the source of all data is the spreadsheet.** This concerns 
 metadata, parameters like acceptance criteria, concentrations and measured data.
