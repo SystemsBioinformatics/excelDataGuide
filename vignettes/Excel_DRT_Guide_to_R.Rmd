@@ -18,12 +18,20 @@ knitr::opts_chunk$set(
 library(excelDataGuide)
 ```
 
-The goal is to have both spreadsheet and scripts as data analysis tools. 
+Excel is a much used tool in the biochemical laboratory, both to record and to 
+analyze experiments. Often, to save work, we create excel templates when these
+experiments become a routine. When analyzing a lot of these experiments 
+switching to a scripting language like R or Python for analysis will become 
+useful. Also in these cases the excel template is a useful way to structure the
+recording of experimental data and metadata.
+
+The goal of the excelDataGuide package is to be able to use both spreadsheet 
+and scripts as data analysis tools. 
 
 Importantly, **the source of all data is the spreadsheet.** This concerns 
 metadata, parameters like acceptance criteria, concentrations and measured data.
-This guarantees that calculation in the spreadsheet and in the scripts are based
-on the same underlying data.
+This guarantees that calculations in the spreadsheet and in the scripts are all 
+based on the same underlying data.
 
 Concerning calculated data it may or may not be useful to let the spreadsheet be
 the source of such data for the script as well. This may be particularly useful 
@@ -54,9 +62,9 @@ and column in the range could also be empty, except for the variable name.
 - **table** format. This is the format for tabular data where columns represent
 variables and rows represent items in which these variables are assessed. Column
 names are written in the first row.
-- **cell** format. Occasionally it may be more convenient to read values from 
-single cells and provide the keys of the corresponding variables in the data 
-guide.
+- **cells** format. Occasionally it may be more convenient to read values from 
+single cells and provide the keys (names) of the corresponding variables in the
+data guide.
  
 
 The keyvalue format will be mostly used for metadata and parameters. All keyvalue 
@@ -165,36 +173,63 @@ The version should correspond to that reported in the template itself,
 otherwise the file or the template is invalid. The user of this package 
 should take care of this check.
 
-## Writing a new guide
+## Writing a good template
+
+### A template has a version number
+
+Preferably, it also has a name.
+
+#### Version rules
+
+Note that template versions must follow the R package versioning rules 
+otherwise checking version numbers will not work. This implies that 
+the version should always contain a major and a minor numeric version 
+separated by a dot. An additional numerical patch version is also allowed. 
+Hence a version like <kbd>2</kbd> is invalid, but <kbd>2.0</kbd> is OK.
+
+### All cells are protected except those for data entry
+
+Data entry cells have a distinct background color
+
+### Include comments
+
+Refer to the SOP+ version 
+
+### Build in data entry checks
+
+### A single source of parameters
+
+### Use of hidden worksheets for data transfer
+
+## Writing a guide
 
 ### Required elements
 
-- `guide.version`: the version of the guide
-- `template.name`: a name for the template
-- `template.min.version`: The minimal version of the template for which the guide 
+-  <kbd>guide.version</kbd>: the version of the guide
+-  <kbd>template.name</kbd>: a name for the template
+-  <kbd>template.min.version</kbd>: The minimal version of the template for which the guide 
    can be used 
    with the guide
-- `template.max.version`: The maximal version of the template for which the guide 
-   can be used. *Note that template versions must follow the R package versioning
-   rules otherwise checking version numbers will not work. This implies that 
-   the version should always contain a major and a minor numeric version 
-   separated by a dot. An additional numerical patch version is also allowed. 
-   Hence a version like "2" is invalid, but "2.0" is OK.*
-- `locations`: the object containing the data locations
-- `translations`: the object containing the translations of variable names. 
+-  <kbd>template.max.version</kbd>: The maximal version of the template for which the guide 
+   can be used.
+-  <kbd>locations</kbd>: the object containing the data locations
+-  <kbd>translations</kbd>: the object containing the translations of variable names. 
    Translations can be used both from extended ('long') format to short format 
    and from short to long format. Two functions are provided by the package to
    perform these translations *vice versa*.
 
 ### Conditionally required element:
 
-- `plate.format` the format of the microplates used for the experiments. This 
+-  <kbd>plate.format</kbd> the format of the microplates used for the experiments. This 
    must be either of '24', '48', '96', or '384'. This is required when a 
-   **platedata** element occurs in the **locations**. Thuis plate format is used
+   **platedata** element occurs in the **locations**. This plate format is used
    to check the correctness of dimensions of the ranges of **platedata** 
    elements.
 
-### Checking against the json schema
+### Checking against the excelDataGuide json schema
 
-A YAML file can be checked against a JSON schema. We provide a JSON schema
-called `excelguide_schema.json` in the folder `data-raw`
+Correctness of the structure of a YAML file like a data guide can be 
+checked against a JSON schema (See [json-schema-everywhere](https://json-schema-everywhere.github.io/yaml)). 
+We provide a JSON schema called <kbd>excelguide_schema.json</kbd> in the folder
+<kbd>data-raw</kbd>. We use the [Polyglottal JSON Schema Validator](https://www.npmjs.com/package/pajv) 
+to validate guides against this schema.
