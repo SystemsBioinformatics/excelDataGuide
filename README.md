@@ -47,3 +47,8 @@ data <- read_data(datafile, guidefile)
 The output of the `read_data()` function is a list object containing the
 data in a structured manner. The structure is determined for a large
 part by the design of the data guide.
+
+## Future work
+
+Provide guide and template structures for data types without upper size
+limit, like time series with no pre-determined length.
