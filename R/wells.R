@@ -72,21 +72,22 @@ well_from_rowcol <- function(row, col) {
 #' @return A list with two elements: row and col
 #' @export
 #' @examples
-#' rowcol_from_well(c("A1", "B2", "C3"), 48)
+#' rowcol_from_well(c("A1", "B2", "C3", NA), 48)
 #' # The order is preserved
 #' rowcol_from_well(c("H12", "A1"), 96)
 rowcol_from_well <- function(well, format) {
   format <- as.character(format)
   if (!length(format) == 1) {
-    rlang::abort("Format must be a single element character vector")
+    rlang::abort("Plate format must be a single element character vector")
   }
-  if (!as.character(format) %in% names(.plateformats)) {
-    rlang::abort("Format must be one of '24', '48', '96', or '384'")
+  plfs <- names(.plateformats)
+  if (!as.character(format) %in% plfs) {
+    rlang::abort(glue::glue("Plate format must be one of ", paste0("'", plfs, "'", collapse = ", "), "."))
   }
   if (!is.character(well)) {
     rlang::abort("Well must be a character vector")
   }
-  if (any(!well %in% .plateformats[[format]]$wellnames)) {
+  if (any(!well[!is.na(well)] %in% .plateformats[[format]]$wellnames)) {
     rlang::abort(glue::glue("Wells not present in {format}-wells format"))
   }
   indices <- match(well, .plateformats[[format]]$map$well)

@@ -36,6 +36,7 @@ test_that("Function rowcol_from_well works", {
   expect_error(rowcol_from_well(c("A1", "B2"), 90))
 })
 
-test_that("Function rowcol_from_well yields error when well is NA", {
-  expect_error(rowcol_from_well(c("A1", NA), 96))
+test_that("Function rowcol_from_well yields no error when well is NA", {
+  expect_no_error(rowcol_from_well(c("A1", NA), 96))
+  expect_equal(rowcol_from_well(c("A1", NA), 96), .plateformats[['96']]$map[c(1,NA), c('row', 'col')])
 })
