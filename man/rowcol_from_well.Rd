@@ -18,7 +18,7 @@ A list with two elements: row and col
 Calculate row and column from well name.
 }
 \examples{
-rowcol_from_well(c("A1", "B2", "C3"), 48)
+rowcol_from_well(c("A1", "B2", "C3", NA), 48)
 # The order is preserved
 rowcol_from_well(c("H12", "A1"), 96)
 }

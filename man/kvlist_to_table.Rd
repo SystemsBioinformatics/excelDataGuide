@@ -17,5 +17,7 @@ kvlist_to_table(kvlist, guide, reverse.translate = TRUE)
 A data frame with columns 'key' and 'value'
 }
 \description{
-Create a table from a list of key-value pairs
+This function facilitates the construction of a table from a list of key-value
+pairs present in the data. This is a handy function if you want to print
+metadata in an analysis report.
 }
