@@ -17,6 +17,16 @@ test_that("function star_to_number works", {
   expect_equal(star_to_number("0*"), 0)
   expect_equal(star_to_number("1.15*"), 1.15)
   expect_equal(star_to_number(c("1.15","0*")), c(1.15, 0))
+  expect_equal(star_to_number(c("*1.15","*0")), c(1.15, 0))
+})
+
+test_that("function has_star works", {
+  expect_equal(has_star(NA), NA)
+  expect_equal(has_star("1*"), TRUE)
+  expect_equal(has_star("10*"), TRUE)
+  expect_equal(has_star("0*"), TRUE)
+  expect_equal(has_star("1.15*"), TRUE)
+  expect_equal(has_star(c("1.15","0*")), c(FALSE, TRUE))
 })
 
 test_that("function kvlist_to_table works", {

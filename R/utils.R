@@ -46,3 +46,14 @@ kvlist_to_table <- function(kvlist, guide, reverse.translate = TRUE) {
 star_to_number <- function(x) {
   as.numeric(stringr::str_remove_all(x, "[*x?]"))
 }
+
+#' Check if a string has a star
+#' @param x A character vector
+#' @return A logical vector
+#' @description
+#' This function checks if a string has a star, x or a question mark.
+#' @export
+#'
+has_star <- function(x) {
+  stringr::str_detect(x, "[*x?]")
+}
