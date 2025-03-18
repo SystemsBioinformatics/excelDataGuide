@@ -1,14 +1,14 @@
-#' Standardize a vector with well names.
+#' Normalize a vector with well names.
 #'
 #' @param v A vector with potentially sloppy well names
 #' @param format A single element character or numeric vector with the format of the plate
 #' @return A vector with standardized well names
 #' @export
 #' @examples
-#' format_wells(c("a01", "A 2", "0", " A 4 ", "A05", "H012"), 96)
+#' normalize_wells(c("a01", "A 2", "0", " A 4 ", "A05", "H012"), 96)
 #'
 #'
-format_wells <- function(v, format) {
+normalize_wells <- function(v, format) {
   v <- as.character(v) |>
     stringr::str_remove_all(" ") |>
     stringr::str_to_upper() |>

@@ -1,13 +1,13 @@
-test_that("function format_wells", {
+test_that("function normalize_wells", {
   wells1 <- c("A1", "B2", "c3", "0", "0")
   expect1 <- c("A1", "B2", "C3", NA, NA)
-  expect_equal(format_wells(wells1, 96), expect1)
+  expect_equal(normalize_wells(wells1, 96), expect1)
   wells2 <- c(0, 0)
   expect2 <- as.character(c(NA, NA))
-  expect_equal(format_wells(wells2, 96), expect2)
+  expect_equal(normalize_wells(wells2, 96), expect2)
   wells3 <- c("A01", " B02", "c03 ", " d0100", "E 50")
   expect3 <- c("A1", "B2", "C3", NA, NA)
-  expect_equal(format_wells(wells3, 96), expect3)
+  expect_equal(normalize_wells(wells3, 96), expect3)
 })
 
 test_that("Function check_wells works", {
