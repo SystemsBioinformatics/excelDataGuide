@@ -2,18 +2,24 @@
 % Please edit documentation in R/read.R
 \name{long_to_shortnames}
 \alias{long_to_shortnames}
-\title{Translate long variable names to short variable names}
+\alias{short_to_longnames}
+\title{Translation between long and short variable names}
 \usage{
 long_to_shortnames(v, translations)
+
+short_to_longnames(v, translations)
 }
 \arguments{
-\item{v}{A vector of long variable names}
+\item{v}{A vector of variable names}
 
 \item{translations}{A named vector with long variable names as names and short variable names as values}
 }
 \value{
-A vector of short variable names
+A vector of long or short variable names
+
+A vector of long variable names
 }
 \description{
-Translate long variable names to short variable names
+Translate between long and short variable names. If a translation is missing the original
+variable long or short variable name from \code{v} is returned.
 }

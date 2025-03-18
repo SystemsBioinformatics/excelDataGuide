@@ -2,8 +2,7 @@
 % Please edit documentation in R/wells.R
 \name{well_from_rowcol}
 \alias{well_from_rowcol}
-\title{Calculate well number from row and column. Function used in \code{raw_map} function
-from package \code{platetools}.}
+\title{Calculate well number from row and column}
 \usage{
 well_from_rowcol(row, col)
 }
@@ -16,6 +15,6 @@ well_from_rowcol(row, col)
 A character vector with the well numbers
 }
 \description{
-Calculate well number from row and column. Function used in \code{raw_map} function
-from package \code{platetools}.
+This function can be used in the \code{raw_map()} function from
+package \code{platetools}.
 }

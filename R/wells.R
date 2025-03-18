@@ -47,8 +47,10 @@ check_wells <- function(wells, format, returnerror = TRUE) {
   wells
 }
 
-#' Calculate well number from row and column. Function used in `raw_map` function
-#' from package `platetools`.
+#' Calculate well number from row and column
+#'
+#' @description This function can be used in the `raw_map()` function from
+#' package `platetools`.
 #'
 #' @param row A character vector with the row names
 #' @param col A numeric vector with the column names

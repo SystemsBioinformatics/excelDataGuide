@@ -2,18 +2,24 @@
 % Please edit documentation in R/utils.R
 \name{star_to_number}
 \alias{star_to_number}
-\title{Convert a string with a star to a number}
+\alias{has_star}
+\title{Using stars to indicate rejected values}
 \usage{
 star_to_number(x)
+
+has_star(x)
 }
 \arguments{
 \item{x}{A character vector}
 }
 \value{
-A numeric vector
+Function \code{star_to_number()} returns a numeric vector, \code{has_star()}
+returns a logical vector.
 }
 \description{
-If a template uses the convention of putting a star in front of numbers that
-should be excluded then this function can be used to convert the variable to
-a number again.
+If a template uses the convention of putting a star in front of or behind
+numbers that should be rejected for further use then the function
+\code{star_to_number()} can be used to convert the variable to a number. The
+function \code{has_star()} checks whether a string has a star. It can be used to
+generate a logical vector indicating accepted/rejected values.
 }

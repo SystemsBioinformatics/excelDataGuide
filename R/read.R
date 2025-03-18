@@ -89,6 +89,7 @@ plate_to_df <- function(d) {
 }
 
 #' Read platedata formatted data from a spreadsheet
+#'
 #' @inherit read_keyvalue
 #' @return A data frame in long format
 #' @noRd
@@ -97,10 +98,14 @@ read_key_plate <- function(drfile, sheet, range, translate = FALSE, translations
   plate_to_df(plate)
 }
 
-#' Translate long variable names to short variable names
-#' @param v A vector of long variable names
+#' Translation between long and short variable names
+#'
+#' @description
+#' Translate between long and short variable names. If a translation is missing the original
+#' variable long or short variable name from `v` is returned.
+#' @param v A vector of variable names
 #' @param translations A named vector with long variable names as names and short variable names as values
-#' @return A vector of short variable names
+#' @return A vector of long or short variable names
 #' @export
 long_to_shortnames <- function(v, translations) {
   positions <- match(v, translations$long)
@@ -112,9 +117,8 @@ long_to_shortnames <- function(v, translations) {
   shortnames
 }
 
-#' Reverse translate short variable names to long variable names
-#' @inherit long_to_shortnames
 #' @return A vector of long variable names
+#' @rdname long_to_shortnames
 #' @export
 short_to_longnames <- function(v, translations) {
   positions <- match(v, translations$short)
