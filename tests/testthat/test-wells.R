@@ -5,9 +5,11 @@ test_that("function normalize_wells", {
   wells2 <- c(0, 0)
   expect2 <- as.character(c(NA, NA))
   expect_equal(normalize_wells(wells2, 96), expect2)
-  wells3 <- c("A01", " B02", "c03 ", " d0100", "E 50")
-  expect3 <- c("A1", "B2", "C3", NA, NA)
-  expect_equal(normalize_wells(wells3, 96), expect3)
+  wells3 <- c("A01", " B02", "c03 ", " d0100", "E 50", "0", "A")
+  expect3a <- c("A1", "B2", "C3", NA, NA, NA, NA)
+  expect3b <- c("A1", "B2", "C3", "D100", "E50", NA, NA)
+  expect_equal(normalize_wells(wells3, 96), expect3a)
+  expect_equal(normalize_wells(wells3), expect3b)
 })
 
 test_that("Function check_wells works", {

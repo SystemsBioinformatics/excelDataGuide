@@ -1,19 +1,31 @@
 #' Normalize a vector with well names.
 #'
 #' @param v A vector with potentially sloppy well names
-#' @param format A single element character or numeric vector with the format of the plate
-#' @return A vector with standardized well names
+#' @param format A single element character or numeric vector with the format of the plate, or NULL
+#' @description
+#' Normalized well names are in the format `A1`, `B2`, `H12`, etc., i.e., an
+#' uppercase letter followed by an integer without zero-padding and without
+#' spaces. If the well name can not be converted to a normalized value an NA is
+#' returned. If the plate format is given then the well names are checked to see
+#' if they are present in the format, and are converted to NA if not.
+#'
+#' @return A vector with normalized well names
 #' @export
 #' @examples
-#' normalize_wells(c("a01", "A 2", "0", " A 4 ", "A05", "H012"), 96)
+#' normalize_wells(c("a01", "A 2", "0", " A 4 ", "A05", "H012", "K12"), 96)
+#' normalize_wells(c("a01", "A 2", "0", " A 4 ", "A05", "H012", "K12"))
 #'
 #'
-normalize_wells <- function(v, format) {
+normalize_wells <- function(v, format = NULL) {
   v <- as.character(v) |>
     stringr::str_remove_all(" ") |>
     stringr::str_to_upper() |>
     stringr::str_replace("(?<=[A-Z])0+", "")
-  check_wells(v , format, returnerror = FALSE)
+  if (!is.null(format)) {
+    v <- check_wells(v , format, returnerror = FALSE)
+  }
+  v[!stringr::str_detect(v, "^[A-Z]+\\d++$")] <- NA
+  v
 }
 
 #' Check if a vector of well names is in the correct format.
