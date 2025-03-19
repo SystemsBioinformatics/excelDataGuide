@@ -6,20 +6,27 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-**excelDataGuide** simplifies reading data from Excel data reporting
-templates (DRT’s) into R.
+**excelDataGuide** simplifies reading data from spreadsheet data
+reporting templates (DRT’s) into R.
 
 A data reporting template is an Excel file for standardized reporting
-and processing of experimental data. The template encourages or forces
-users to provide data in a structured manner that minimizes errors and
-misinterpretation.
+and processing of experimental data. Such templates reduce the time
+spent on data analysis and encourage or force users to provide data in a
+structured manner so that errors and misinterpretations are minimized.
+The **excelDataGuide** package avoids the problem of having to write and
+maintain code to read data from complicated spreadsheet DRT’s.
+Furthermore, it provides an infrastructure to check the validity of
+data, to read data in the correct data types and to wrangle data when
+appropriate or desired. It thereby facilitates enables the
+*Interoperability*, the **I** of the
+[FAIR](https://www.go-fair.org/fair-principles/) principles for DRT’s.
 
 The package provides a simple interface to read data from Excel files
 and convert them into R objects. We assume that data is organized in
-three types of data structures; key-value pairs, tabular data and
+three types of data structures: key-value pairs, tabular data and
 microplateplate-formatted data. The locations of these data structures
-in the Excel template are provided by a **data guide**. A data guide is
-a YAML file designed for a specific data reporting template.
+in the Excel template are provided by a **data guide**, which is a YAML
+file, a human- as well as machine-readable structured file format.
 
 ## Installation
 
