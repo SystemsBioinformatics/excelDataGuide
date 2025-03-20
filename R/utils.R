@@ -45,9 +45,13 @@ has_star <- function(x) {
 }
 
 
-#' Coerce based on atomicclass
-#' @param x A vector
+#' Coerce a character vector based on atomicclass
+#' @param x A character vector
 #' @param atomicclass A character string indicating the atomic class
+#' @description
+#' We assume that the date is stored as a signed integer in excel, being the
+#' number of days passed since January 1 1970.
+#  TODO: check the previous statement
 #' @return A vector of the specified atomic class
 #' @noRd
 coerce <- function(x, atomicclass) {
