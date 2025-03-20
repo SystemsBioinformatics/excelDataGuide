@@ -6,27 +6,30 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-**excelDataGuide** simplifies reading data from spreadsheet data
-reporting templates (DRT’s) into R.
+**excelDataGuide** is an R package designed to streamline the process of
+importing data from spreadsheet *data reporting templates* (DRTs) into
+R.
 
-A data reporting template is an Excel file for standardized reporting
-and processing of experimental data. Such templates reduce the time
-spent on data analysis and encourage or force users to provide data in a
-structured manner so that errors and misinterpretations are minimized.
-The **excelDataGuide** package avoids the problem of having to write and
-maintain code to read data from complicated spreadsheet DRT’s.
-Furthermore, it provides an infrastructure to check the validity of
-data, to read data in the correct data types and to wrangle data when
-appropriate or desired. It thereby facilitates enables the
-*Interoperability*, the **I** of the
-[FAIR](https://www.go-fair.org/fair-principles/) principles for DRT’s.
+A *data reporting template* is a standardized spreadsheet file (in
+either xls or xlsx format) used for reporting and processing
+experimental data. These templates significantly reduce the time
+required for data analysis and encourage users to present their data in
+a structured format, minimizing errors and misinterpretations.
 
-The package provides a simple interface to read data from Excel files
-and convert them into R objects. We assume that data is organized in
-three types of data structures: key-value pairs, tabular data and
-microplateplate-formatted data. The locations of these data structures
-in the Excel template are provided by a **data guide**, which is a YAML
-file, a human- as well as machine-readable structured file format.
+The **excelDataGuide** package eliminates the need for users to write
+and maintain complex code for reading data from intricate spreadsheet
+DRTs. Additionally, it offers a robust framework for validating data,
+ensuring the correct data types are utilized, and facilitating data
+wrangling when necessary. This functionality supports *Interoperability*
+for DRTs, a key aspect of the
+[FAIR](https://www.go-fair.org/fair-principles/) principles.
+
+The package features a user-friendly interface for extracting data from
+Excel files and converting it into R objects. It accommodates three
+types of data structures: key-value pairs, tabular data, and
+microplate-formatted data. The locations of these structures within the
+Excel template are specified by a **data guide**, which is a YAML file —
+a structured format that is both human- and machine-readable.
 
 ## Installation
 
@@ -40,7 +43,7 @@ pak::pak("SystemsBioinformatics/excelDataGuide")
 
 ## Example
 
-The basic usage of the package only requires one command with two file
+The basic usage of the package requires only one command with two file
 paths: the path to the Excel data file and the path to the data guide
 file. Here is an example:
 
@@ -51,11 +54,10 @@ guidefile <- system.file("extdata", "example_guide.yml", package = "excelDataGui
 data <- read_data(datafile, guidefile)
 ```
 
-The output of the `read_data()` function is a list object containing the
-data in a structured manner. The structure is determined for a large
-part by the design of the data guide.
+The output of the `read_data()` function is a list object the format of
+which is determined for a large part by the design of the data guide.
 
 ## Future work
 
-Provide guide and template structures for data types without upper size
-limit, like time series with no pre-determined length.
+We want to provide guide and template structures for data types without
+upper size limit, like time series with no pre-determined length.
