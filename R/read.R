@@ -27,7 +27,8 @@ read_cells <- function(drfile, sheet, variables, translate = FALSE, translations
            "character" = as.character(y),
            "numeric" = as.numeric(y),
            "integer" = as.integer(y),
-           "logical" = as.logical(y))
+           "logical" = as.logical(y),
+           "date" = as.integer(y))
   })
 }
 

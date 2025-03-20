@@ -27,10 +27,16 @@ locations:
     atomicclass: numeric
     varname: metadata
     ranges:
-      - A15:B15
       - A17:B17
       - A19:B19
       - A21:B21
+  - sheet: description
+    type: keyvalue
+    translate: true
+    atomicclass: date
+    varname: metadata
+    ranges:
+      - A15:B15
   - sheet: _data
     type: platedata
     translate: false

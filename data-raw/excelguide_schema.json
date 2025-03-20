@@ -72,7 +72,7 @@
     },
     "atomicclass": {
       "description": "Interpreted type of data, using R-conventions",
-      "enum": [ "numeric", "character", "integer", "logical" ]
+      "enum": [ "numeric", "character", "integer", "logical", "date" ]
     },
     "versionnumber": {
       "description": "Version number with at least major and minor number and optional patch number",
