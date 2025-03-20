@@ -50,8 +50,14 @@ has_star <- function(x) {
 #' @param atomicclass A character string indicating the atomic class
 #' @description
 #' We assume that the date is stored as a signed integer in excel, being the
-#' number of days passed since January 1 1970.
-#  TODO: check the previous statement
+#' number of days passed since January 1 1970. When read by read_excel it seems
+#' to be converted to the number of seconds passed since January 1 1970. This
+#' is the same as the POSIXct class in R. Hence, we can convert this number `x`
+#' to a date again by using `as.POSIXct(x)` and
+#' `format(as.POSIXct(x, tz=""), format="%Y-%m-%d")` to get a string with format
+#' YYYY-MM-DD.
+#'
+#  TODO: check the previous statements
 #' @return A vector of the specified atomic class
 #' @noRd
 coerce <- function(x, atomicclass) {
@@ -60,5 +66,6 @@ coerce <- function(x, atomicclass) {
          "numeric" = as.numeric(x),
          "integer" = as.integer(x),
          "logical" = as.logical(x),
-         "date" = as.integer(x))
+         "date" = as.POSIXct(as.integer(x))
+        )
 }

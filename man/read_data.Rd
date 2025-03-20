@@ -24,3 +24,8 @@ of the guide mustbe compatible with that of the template in which the data
 were recorded. Furthermore, the name of the template must match the template
 name in the guide when when \code{checkname} is \code{TRUE}.
 }
+\details{
+The date atomicclass is a POSIXct object in R. Hence, we can convert this
+object to a date string with format YYYY-MM-DD by using
+\code{format(as.POSIXct(x, tz=""), format="\%Y-\%m-\%d")}.
+}

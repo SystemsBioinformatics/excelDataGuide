@@ -129,6 +129,10 @@ short_to_longnames <- function(v, translations) {
 #' of the guide mustbe compatible with that of the template in which the data
 #' were recorded. Furthermore, the name of the template must match the template
 #' name in the guide when when `checkname` is `TRUE`.
+#' @details
+#' The date atomicclass is a POSIXct object in R. Hence, we can convert this
+#' object to a date string with format YYYY-MM-DD by using
+#' `format(as.POSIXct(x, tz=""), format="%Y-%m-%d")`.
 #' @return A list with up to three elements
 #' @export
 #'
