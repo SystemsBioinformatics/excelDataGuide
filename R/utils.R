@@ -43,3 +43,18 @@ star_to_number <- function(x) {
 has_star <- function(x) {
   stringr::str_detect(x, "[*x?]")
 }
+
+
+#' Coerce based on atomicclass
+#' @param x A vector
+#' @param atomicclass A character string indicating the atomic class
+#' @return A vector of the specified atomic class
+#' @noRd
+coerce <- function(x, atomicclass) {
+  switch(atomicclass,
+         "character" = as.character(x),
+         "numeric" = as.numeric(x),
+         "integer" = as.integer(x),
+         "logical" = as.logical(x),
+         "date" = as.integer(x))
+}

@@ -22,14 +22,7 @@ read_cells <- function(drfile, sheet, variables, translate = FALSE, translations
     }
   })
   result <- stats::setNames(result, sapply(variables, function(x) x$name))
-  lapply(result, function(y) {
-    switch(atomicclass,
-           "character" = as.character(y),
-           "numeric" = as.numeric(y),
-           "integer" = as.integer(y),
-           "logical" = as.logical(y),
-           "date" = as.integer(y))
-  })
+  lapply(result, coerce, atomicclass)
 }
 
 #' Read keyvalue pair formatted data from a spreadsheet
@@ -47,14 +40,7 @@ read_keyvalue <- function(drfile, sheet, range, translate = FALSE, translations 
   if (translate) {
     keyvalue$key <- long_to_shortnames(keyvalue$key, translations)
   }
-  coerce <- function(x) {
-    switch(atomicclass,
-           "character" = as.character(x),
-           "numeric" = as.numeric(x),
-           "integer" = as.integer(x),
-           "logical" = as.logical(x))
-  }
-  kvlist <- lapply(keyvalue$value, coerce)
+  kvlist <- lapply(keyvalue$value, coerce, atomicclass)
   names(kvlist) <- keyvalue$key
   kvlist
 }
