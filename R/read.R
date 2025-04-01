@@ -52,6 +52,25 @@ read_cells <- function(drfile, sheet, variables, translate = FALSE, translations
 #   names(kvlist) <- keyvalue$key
 #   kvlist
 # }
+#
+# THIS PART IS FROM THE OLD CALLING FUNCTION
+# if (!location$type == "cells") {
+#   chunks <- lapply(location$ranges, function(range) {
+#     read_function(drfile = drfile, sheet = location$sheet, range = range, translate = location$translate,
+#                   translations = guide$translations, atomicclass = atomicclass)
+#   })
+# } else {
+#   chunks <- read_cells(drfile = drfile, sheet = location$sheet, variables = location$variables, translate = location$translate,
+#                        translations = guide$translations, atomicclass = atomicclass)
+# }
+#
+# chunk <- switch(
+#   location$type,
+#   "keyvalue" = do.call(c, chunks),
+#   "table" = dplyr::bind_rows(chunks),
+#   "platedata" = suppressMessages(Reduce(dplyr::full_join, chunks)),
+#   "cells" = chunks
+# )
 read_keyvalue <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
 
   chunks <- lapply(ranges, function(range) {
