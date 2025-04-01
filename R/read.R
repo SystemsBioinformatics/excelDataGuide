@@ -51,6 +51,7 @@ read_keyvalue <- function(drfile, sheet, range, translate = FALSE, translations 
 #' @noRd
 #'
 read_table <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
+  # TODO coerce to atomicclass
   tbl <- readxl::read_excel(drfile, sheet = sheet, range = range)
   if (translate) {
     names(tbl) <- long_to_shortnames(names(tbl), translations)
