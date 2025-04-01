@@ -28,19 +28,47 @@ read_cells <- function(drfile, sheet, variables, translate = FALSE, translations
 #' Read keyvalue pair formatted data from a spreadsheet
 #' @param drfile Path to the data reporting file
 #' @param sheet The sheet name
-#' @param range The range of the data
+#' @param ranges A vector of ranges
 #' @param translate Whether to translate long variable names to short variable names
 #' @param translations A named vector with long variable names as names and short variable names as values
 #' @param atomicclass The name of the class to which the values should be coerced, if possible
+#' @description
+#' The `atomicclass` argument can be a single class name or a vector of class names.
+#' If it is a single class name, all values will be coerced to this class. If it
+#' is a vector of class names, the length of the vector must be equal to the number
+#' of rows in the keyvalue table or equal to the number of columns in a table type
+#' range. In this case, each value will be coerced to the class specified in the
+#' corresponding element of the vector or column of the table.
 #' @return A named list. Values are coerced to character
 #' @noRd
 #'
-read_keyvalue <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
-  keyvalue <- readxl::read_excel(drfile, sheet = sheet, range = range, col_names = c("key", "value"))
+read_keyvalue <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
+
+  chunks <- lapply(ranges, function(range) {
+    readxl::read_excel(drfile, sheet = sheet, range = range, col_names = c("key", "value"))
+  })
+
+  keyvalue <- do.call(c, chunks) |>
+
   if (translate) {
     keyvalue$key <- long_to_shortnames(keyvalue$key, translations)
   }
-  kvlist <- lapply(keyvalue$value, coerce, atomicclass)
+
+  if (length(atomicclass) == 1) {
+    kvlist <- lapply(keyvalue$value, coerce, atomicclass)
+  } else {
+
+    if (!length(atomicclass) == length(keyvalue)) {
+      rlang::abort(
+        glue::glue("The number of atomic classes ({ length(atomicclass) }) must be 1 or equal to the
+                    number of elements ({ length(keyvalue) }) in the keyvalue table.")
+      )
+    }
+
+    kvlist <- lapply(seq_along(keyvalue$value), function(i) {
+      keyvalue$value[i] |> coerce(atomicclass[i])
+    })
+  }
   names(kvlist) <- keyvalue$key
   kvlist
 }
@@ -50,12 +78,28 @@ read_keyvalue <- function(drfile, sheet, range, translate = FALSE, translations 
 #' @return A data frame in long format
 #' @noRd
 #'
-read_table <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
-  # TODO coerce to atomicclass
-  tbl <- readxl::read_excel(drfile, sheet = sheet, range = range)
+read_table <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
+  tbl <- lapply(ranges, function(range) {
+    readxl::read_excel(drfile, sheet = sheet, range = range)}) |>
+    dplyr::bind_rows()
+
+  if (length(atomicclass) == 1) {
+    for (i in seq_along(tbl)) {
+      tbl[[i]] <- tbl[[i]] |> coerce(atomicclass)
+    }
+  } else {
+    if (!length(atomicclass) == ncol(tbl)) {
+      rlang::abort("The number of atomic classes must be 1 or equal to the number of columns in the table.")
+    }
+    for (i in seq_along(atomicclass)) {
+      tbl[[i]] <- tbl[[i]] |> coerce(atomicclass[i])
+    }
+  }
+
   if (translate) {
     names(tbl) <- long_to_shortnames(names(tbl), translations)
   }
+
   tbl
 }
 
@@ -72,6 +116,8 @@ plate_to_df <- function(d) {
     var = as.matrix(d[, -1]) |>
       as.vector()
   )
+
+  # TODO: handle plate formats generically
   names(newdf) <- c("row", "col", var)
   newdf
 }
@@ -81,9 +127,13 @@ plate_to_df <- function(d) {
 #' @inherit read_keyvalue
 #' @return A data frame in long format
 #' @noRd
-read_key_plate <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
-  plate <- readxl::read_excel(drfile, sheet = sheet, range = range)
-  plate_to_df(plate)
+read_key_plate <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
+  chunks <- lapply(ranges, function(range) {
+    plate <- readxl::read_excel(drfile, sheet = sheet, range = range) |>
+      plate_to_df()
+  })
+  # TODO: handle vectors of atomicclass
+  suppressMessages(Reduce(dplyr::full_join, chunks))
 }
 
 #' Translation between long and short variable names
@@ -162,22 +212,13 @@ read_data <- function(drfile, guide, checkname = FALSE) {
     atomicclass <- if ("atomicclass" %in% names(location)) location$atomicclass else "character"
 
     if (!location$type == "cells") {
-      chunks <- lapply(location$ranges, function(range) {
-        read_function(drfile = drfile, sheet = location$sheet, range = range, translate = location$translate,
-                           translations = guide$translations, atomicclass = atomicclass)
-      })
+      chunk <- read_function(drfile = drfile, sheet = location$sheet, ranges = location$ranges,
+                             translate = location$translate, translations = guide$translations,
+                             atomicclass = atomicclass)
     } else {
-      chunks <- read_cells(drfile = drfile, sheet = location$sheet, variables = location$variables, translate = location$translate,
+      chunk <- read_cells(drfile = drfile, sheet = location$sheet, variables = location$variables, translate = location$translate,
                       translations = guide$translations, atomicclass = atomicclass)
     }
-
-    chunk <- switch(
-      location$type,
-      "keyvalue" = do.call(c, chunks),
-      "table" = dplyr::bind_rows(chunks),
-      "platedata" = suppressMessages(Reduce(dplyr::full_join, chunks)),
-      "cells" = chunks
-    )
 
     if (!(location$varname %in% names(result[[location$type]]))) {
       result[[location$type]][[location$varname]] <- chunk
