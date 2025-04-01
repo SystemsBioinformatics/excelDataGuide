@@ -42,6 +42,16 @@ read_cells <- function(drfile, sheet, variables, translate = FALSE, translations
 #' @return A named list. Values are coerced to character
 #' @noRd
 #'
+# THE OLD FUNCTION
+# read_keyvalue <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
+#   keyvalue <- readxl::read_excel(drfile, sheet = sheet, range = range, col_names = c("key", "value"))
+#   if (translate) {
+#     keyvalue$key <- long_to_shortnames(keyvalue$key, translations)
+#   }
+#   kvlist <- lapply(keyvalue$value, coerce, atomicclass)
+#   names(kvlist) <- keyvalue$key
+#   kvlist
+# }
 read_keyvalue <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
 
   chunks <- lapply(ranges, function(range) {
