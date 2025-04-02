@@ -134,9 +134,13 @@ validity of guides that you wrote. The schema is available in the
 package as
 `system.file("extdata", "excelguide_schema.json", package = "excelDataGuide")`.
 To check its validity against the schema you can use the [Polyglottal
-JSON Schema Validator](https://www.npmjs.com/package/pajv).
+JSON Schema Validator](https://www.npmjs.com/package/pajv). More details
+can be found in the vignette (to be done, see below).
 
 ## Future work
 
-We want to provide guide and template structures for data types without
-upper size limit, typically time series with no pre-determined length.
+- Complete the vignette
+  ([issue](https://github.com/SystemsBioinformatics/excelDataGuide/issues/2))
+- Provide guide and template structures for data types without upper
+  size limit, typically time series with no pre-determined length
+  ([issue](https://github.com/SystemsBioinformatics/excelDataGuide/issues/1)).
