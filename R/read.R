@@ -118,6 +118,7 @@ read_table <- function(drfile, sheet, ranges, translate = FALSE, translations = 
 #' @noRd
 #'
 plate_to_df <- function(d) {
+  # TODO: handle plate formats generically
   var <- names(d)[1]
   newdf <- tibble::tibble(
     row = rep(LETTERS[1:8], 12),
@@ -126,7 +127,6 @@ plate_to_df <- function(d) {
       as.vector()
   )
 
-  # TODO: handle plate formats generically
   names(newdf) <- c("row", "col", var)
   newdf
 }
