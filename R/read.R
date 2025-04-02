@@ -43,32 +43,32 @@ read_cells <- function(drfile, sheet, variables, translate = FALSE, translations
 #' @noRd
 #'
 read_keyvalue <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
-
+  # Read and combine key-value pairs from the specified ranges
   kvtable <- lapply(ranges, function(range) {
     readxl::read_excel(drfile, sheet = sheet, range = range, col_names = c("key", "value"))
-  }) |>
-    dplyr::bind_rows()
+  }) |> dplyr::bind_rows()
 
+  # Translate keys if required
   if (translate) {
     kvtable$key <- long_to_shortnames(kvtable$key, translations)
   }
 
+  # Convert values to a list
   kvlist <- as.list(kvtable$value)
 
-  if (length(atomicclass) == 1) {
-    kvlist <- lapply(kvlist, coerce, atomicclass)
+  # Coerce values to the specified atomic class
+  kvlist <- if (length(atomicclass) == 1) {
+    lapply(kvlist, coerce, atomicclass)
   } else {
     if (length(atomicclass) != length(kvlist)) {
-      rlang::abort(
-        glue::glue("The number of atomic classes ({ length(atomicclass) }) must be 1 or equal to the
-                    number of elements ({ length(kvlist) }) in the keyvalue table.")
-      )
+      rlang::abort(glue::glue(
+        "The number of atomic classes ({length(atomicclass)}) must be 1 or equal to the number of elements ({length(kvlist)}) in the key-value table."
+      ))
     }
-    kvlist <- lapply(seq_along(kvlist), function(i) {
-      kvlist[[i]] |> coerce(atomicclass[i])
-    })
+    mapply(coerce, kvlist, atomicclass, SIMPLIFY = FALSE)
   }
 
+  # Return a named list with keys and coerced values
   setNames(kvlist, kvtable$key)
 }
 
