@@ -25,5 +25,4 @@ if they are present in the format, and are converted to NA if not.
 normalize_wells(c("a01", "A 2", "0", " A 4 ", "A05", "H012", "K12"), 96)
 normalize_wells(c("a01", "A 2", "0", " A 4 ", "A05", "H012", "K12"))
 
-
 }

@@ -23,6 +23,7 @@ Imports:
     glue,
     readxl,
     rlang,
+    stats,
     stringr,
     tibble,
     yaml

@@ -64,17 +64,17 @@ test_that("Function read_data works", {
 })
 
 
-test_that("Function read_data using guide with two plates returns two plates", {
-  # guide <- read_guide(test_path("testdata/goodguides/guide_with_two_plates.yml"))
-  # result <- read_data(drfile = test_path('testdata/test1.xlsx'), guide = guide)
-  # expect_equal(length(result$platedata), 2)
-})
+# test_that("Function read_data using guide with two plates returns two plates", {
+#   guide <- read_guide(test_path("testdata/goodguides/guide_with_two_plates.yaml"))
+#   result <- read_data(drfile = test_path('testdata/test1.xlsx'), guide = guide)
+#   expect_equal(length(result$platedata), 2)
+# })
 
-test_that("Function read_data using guide split table returns single table", {
-  # guide <- read_guide(test_path("testdata/goodguides/guide_with_split_table.yml"))
-  # result <- read_data(drfile = test_path('testdata/test2.xlsx'), guide = guide)
-  # expect_equal(length(result$table), 1)
-})
+# test_that("Function read_data using guide split table returns single table", {
+#   # guide <- read_guide(test_path("testdata/goodguides/guide_with_split_table.yml"))
+#   # result <- read_data(drfile = test_path('testdata/test2.xlsx'), guide = guide)
+#   # expect_equal(length(result$table), 1)
+# })
 
 test_that("Version incompatibilities yield an error.", {
   guide <- read_guide(test_path("testdata/erroneousguides/conflicting_min_version.yml"))
