@@ -42,64 +42,34 @@ read_cells <- function(drfile, sheet, variables, translate = FALSE, translations
 #' @return A named list. Values are coerced to character
 #' @noRd
 #'
-# THE OLD FUNCTION
-# read_keyvalue <- function(drfile, sheet, range, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
-#   keyvalue <- readxl::read_excel(drfile, sheet = sheet, range = range, col_names = c("key", "value"))
-#   if (translate) {
-#     keyvalue$key <- long_to_shortnames(keyvalue$key, translations)
-#   }
-#   kvlist <- lapply(keyvalue$value, coerce, atomicclass)
-#   names(kvlist) <- keyvalue$key
-#   kvlist
-# }
-#
-# THIS PART IS FROM THE OLD CALLING FUNCTION
-# if (!location$type == "cells") {
-#   chunks <- lapply(location$ranges, function(range) {
-#     read_function(drfile = drfile, sheet = location$sheet, range = range, translate = location$translate,
-#                   translations = guide$translations, atomicclass = atomicclass)
-#   })
-# } else {
-#   chunks <- read_cells(drfile = drfile, sheet = location$sheet, variables = location$variables, translate = location$translate,
-#                        translations = guide$translations, atomicclass = atomicclass)
-# }
-#
-# chunk <- switch(
-#   location$type,
-#   "keyvalue" = do.call(c, chunks),
-#   "table" = dplyr::bind_rows(chunks),
-#   "platedata" = suppressMessages(Reduce(dplyr::full_join, chunks)),
-#   "cells" = chunks
-# )
 read_keyvalue <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
 
-  chunks <- lapply(ranges, function(range) {
+  kvtable <- lapply(ranges, function(range) {
     readxl::read_excel(drfile, sheet = sheet, range = range, col_names = c("key", "value"))
-  })
-
-  keyvalue <- do.call(c, chunks) |>
+  }) |>
+    dplyr::bind_rows()
 
   if (translate) {
-    keyvalue$key <- long_to_shortnames(keyvalue$key, translations)
+    kvtable$key <- long_to_shortnames(kvtable$key, translations)
   }
+
+  kvlist <- as.list(kvtable$value)
 
   if (length(atomicclass) == 1) {
-    kvlist <- lapply(keyvalue$value, coerce, atomicclass)
+    kvlist <- lapply(kvlist, coerce, atomicclass)
   } else {
-
-    if (!length(atomicclass) == length(keyvalue)) {
+    if (length(atomicclass) != length(kvlist)) {
       rlang::abort(
         glue::glue("The number of atomic classes ({ length(atomicclass) }) must be 1 or equal to the
-                    number of elements ({ length(keyvalue) }) in the keyvalue table.")
+                    number of elements ({ length(kvlist) }) in the keyvalue table.")
       )
     }
-
-    kvlist <- lapply(seq_along(keyvalue$value), function(i) {
-      keyvalue$value[i] |> coerce(atomicclass[i])
+    kvlist <- lapply(seq_along(kvlist), function(i) {
+      kvlist[[i]] |> coerce(atomicclass[i])
     })
   }
-  names(kvlist) <- keyvalue$key
-  kvlist
+
+  setNames(kvlist, kvtable$key)
 }
 
 #' Read table formatted data from a spreadsheet
@@ -270,10 +240,12 @@ read_data <- function(drfile, guide, checkname = FALSE) {
   }
   num.template.version <- package_version(template.version)
   num.min.version <- package_version(guide$template.min.version)
+
   if (num.template.version < num.min.version) {
      rlang::abort(glue::glue("The guide is incompatible with the template.
                              The template version should be minimally {guide$template.min.version}, whereas it is {result$template.metadata$template.version}."))
   }
+
   if (!is.null(guide$template.max.version)) {
     num.max.version <- package_version(guide$template.max.version)
     if (num.max.version < num.template.version) {
