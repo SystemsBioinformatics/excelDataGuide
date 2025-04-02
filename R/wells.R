@@ -49,12 +49,15 @@ check_wells <- function(wells, format, returnerror = TRUE) {
 
   # Validate plate format
   if (!format %in% names(.plateformats)) {
-    rlang::abort("Invalid plate format. Must be one of '24', '48', '96', or '384'.")
+    valid_formats <- paste(names(.plateformats), collapse = ", ")
+    rlang::abort(glue::glue(
+      "Invalid plate format '{format}'. Valid formats are: {valid_formats}."
+    ))
   }
 
   # Ensure wells is a character vector
   if (!is.character(wells)) {
-    rlang::abort("The 'wells' parameter must be a character vector.")
+    rlang::abort("Invalid 'wells' argument {wells}. The 'wells' argument must be a character vector.")
   }
 
   # Identify invalid wells
