@@ -1,5 +1,6 @@
 guide.version: '1.0'
 template.name: competition
+template.min.version: '9.3'
 template.max.version: ~
 plate.format: 96
 locations:
@@ -13,41 +14,32 @@ locations:
   - sheet: description
     type: keyvalue
     translate: true
-    atomicclass:
-      - character
-      - character
-      - character
-      - character
-      - character
-      - date
-      - character
-      - numeric
-      - character
-      - numeric
-      - character
-      - numeric
-      - character
-      - character
     varname: metadata
     ranges:
-      - A10:B21
+      - A10:B14
+      - A16:B16
+      - A18:B18
+      - A20:B20
       - A24:B25
+  - sheet: description
+    type: keyvalue
+    translate: true
+    atomicclass: numeric
+    varname: metadata
+    ranges:
+      - A17:B17
+      - A19:B19
+      - A21:B21
+  - sheet: description
+    type: keyvalue
+    translate: true
+    atomicclass: date
+    varname: metadata
+    ranges:
+      - A15:B15
   - sheet: _data
     type: platedata
     translate: false
-    atomicclass:
-      - character
-      - integer
-      - character
-      - numeric
-      - numeric
-      - numeric
-      - numeric
-      - numeric
-      - numeric
-      - character
-      - character
-      - character
     varname: plate
     ranges:
       - A1:M9
@@ -99,7 +91,7 @@ locations:
         cell: G6
       - name: spread.itm2
         cell: G33
-  - sheet: plate + experiment control
+  - sheet: "plate + experiment control"
     type: cells
     varname: userresults
     translate: false

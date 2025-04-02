@@ -11,26 +11,30 @@ locations:
     variables:
       - name: version
         cell: B2
-  - factor
   - sheet: description
     type: keyvalue
     translate: true
-    atomicclass: numeric
+    atomicclass: factor
     varname: metadata
     ranges:
-      - A17:B17
-      - A19:B19
-      - A21:B21
-  - sheet: description
-    type: keyvalue
-    translate: true
-    atomicclass: date
-    varname: metadata
-    ranges:
-      - A15:B15
+      - A10:B21
+      - A24:B25
   - sheet: _data
     type: platedata
     translate: false
+    atomicclass:
+      - character
+      - integer
+      - character
+      - numeric
+      - numeric
+      - numeric
+      - numeric
+      - numeric
+      - numeric
+      - character
+      - character
+      - character
     varname: plate
     ranges:
       - A1:M9

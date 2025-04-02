@@ -99,7 +99,12 @@
             "pattern": "^[A-Z]+\\d+(:[A-Z]\\d+)?$"
           }
         },
-        "atomicclass": { "$ref": "#/definitions/atomicclass" }
+        "atomicclass": {
+          "anyOf": [
+            { "$ref": "#/definitions/atomicclass" },
+            { "type": "array", "items": { "$ref": "#/definitions/atomicclass" } }
+          ]
+        }
       }
     },
     "celllocation" :{

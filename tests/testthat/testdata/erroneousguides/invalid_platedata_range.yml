@@ -14,43 +14,45 @@ locations:
   - sheet: description
     type: keyvalue
     translate: true
+    atomicclass:
+      - character
+      - character
+      - character
+      - character
+      - character
+      - date
+      - character
+      - numeric
+      - character
+      - numeric
+      - character
+      - numeric
+      - character
+      - character
     varname: metadata
     ranges:
-      - A10:B14
-      - A16:B16
-      - A18:B18
-      - A20:B20
+      - A10:B21
       - A24:B25
-  - sheet: description
-    type: keyvalue
-    translate: true
-    atomicclass: numeric
-    varname: metadata
-    ranges:
-      - A1:M8
-      - A11:M19
-  - sheet: description
-    type: keyvalue
-    translate: true
-    atomicclass: date
-    varname: metadata
-    ranges:
-      - A15:B15
   - sheet: _data
     type: platedata
     translate: false
+    atomicclass:
+      - character
+      - integer
+      - character
+      - numeric
+      - numeric
+      - numeric
+      - numeric
+      - numeric
+      - numeric
+      - character
+      - character
+      - character
     varname: plate
     ranges:
-      - A1:M9
+      - A1:M8
       - A11:M19
-      - A21:M29
-      - A31:M39
-      - A41:M49
-      - A51:M59
-      - A61:M69
-      - A71:M79
-      - A81:M89
-      - A91:M99
   - sheet: _data
     type: table
     translate: false
