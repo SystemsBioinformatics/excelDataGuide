@@ -1,6 +1,6 @@
 Package: excelDataGuide
 Title: Read Data from templated Excel Data Reports
-Version: 0.2.3
+Version: 0.2.4
 Authors@R: 
     person("Douwe", "Molenaar", , "d.molenaar@vu.nl", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7108-4545"))
