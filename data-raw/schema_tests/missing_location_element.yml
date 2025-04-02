@@ -35,6 +35,19 @@ locations:
   - sheet: _data
     type: platedata
     translate: false
+    atomicclass:
+      - character
+      - integer
+      - character
+      - numeric
+      - numeric
+      - numeric
+      - numeric
+      - numeric
+      - numeric
+      - character
+      - character
+      - character
     varname: plate
     ranges:
       - A1:M9

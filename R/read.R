@@ -9,19 +9,30 @@
 #' @noRd
 #'
 read_cells <- function(drfile, sheet, variables, translate = FALSE, translations = NULL, atomicclass = 'character') {
+  # Process each variable
   result <- lapply(variables, function(v) {
-    dims <- dim(cellranger::as.cell_limits(v$cell))
-    if (any(dims > 1)) {
+    # Ensure the cell address points to a single cell
+    if (any(dim(cellranger::as.cell_limits(v$cell)) > 1)) {
       rlang::abort(glue::glue("A cell address should point to a single cell."))
     }
-    x <- suppressMessages(readxl::read_excel(drfile, sheet = sheet, range = v$cell, col_names = FALSE))
-    if (nrow(x) == 0) {
-      x <- NA
+
+    # Read the cell value
+    cell_data <- suppressMessages(
+      readxl::read_excel(drfile, sheet = sheet, range = v$cell, col_names = FALSE)
+    )
+
+    # Handle empty cells
+    if (nrow(cell_data) == 0) {
+      NA
     } else {
-      x <- x[[1]][1]
+      cell_data[[1]][1]
     }
   })
-  result <- stats::setNames(result, sapply(variables, function(x) x$name))
+
+  # Assign names to the results
+  result <- stats::setNames(result, sapply(variables, `[[`, "name"))
+
+  # Coerce values to the specified atomic class
   lapply(result, coerce, atomicclass)
 }
 
@@ -126,12 +137,33 @@ plate_to_df <- function(d) {
 #' @return A data frame in long format
 #' @noRd
 read_key_plate <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
+  # Read and convert each range to a long-format data frame
   chunks <- lapply(ranges, function(range) {
     plate <- readxl::read_excel(drfile, sheet = sheet, range = range) |>
       plate_to_df()
   })
-  # TODO: handle vectors of atomicclass
-  suppressMessages(Reduce(dplyr::full_join, chunks))
+
+  # Combine all chunks into a single data frame
+  combined <- suppressMessages(Reduce(dplyr::full_join, chunks))
+
+  # Handle vectors of atomicclass
+  if (length(atomicclass) == 1) {
+    combined[] <- lapply(combined, coerce, atomicclass)
+  } else {
+    if (length(atomicclass) != ncol(combined)) {
+      rlang::abort(glue::glue(
+        "The number of atomic classes ({length(atomicclass)}) must be 1 or equal to the number of columns ({ncol(combined)}) in the combined data frame."
+      ))
+    }
+    combined[] <- Map(coerce, combined, atomicclass)
+  }
+
+  # Translate column names if required
+  if (translate) {
+    names(combined) <- long_to_shortnames(names(combined), translations)
+  }
+
+  combined
 }
 
 #' Translation between long and short variable names
@@ -144,12 +176,17 @@ read_key_plate <- function(drfile, sheet, ranges, translate = FALSE, translation
 #' @return A vector of long or short variable names
 #' @export
 long_to_shortnames <- function(v, translations) {
+  # Match long names to their corresponding short names
   positions <- match(v, translations$long)
   shortnames <- translations$short[positions]
-  if (any (is.na(positions))) {
+
+  # Handle missing translations
+  missing_indices <- is.na(positions)
+  if (any(missing_indices)) {
     rlang::warn("Missing translations. Using original long names.")
-    shortnames[is.na(positions)] <- v[is.na(positions)]
+    shortnames[missing_indices] <- v[missing_indices]
   }
+
   shortnames
 }
 
@@ -157,12 +194,16 @@ long_to_shortnames <- function(v, translations) {
 #' @rdname long_to_shortnames
 #' @export
 short_to_longnames <- function(v, translations) {
+  # Match short names to their corresponding long names
   positions <- match(v, translations$short)
   longnames <- translations$long[positions]
-  if (any(is.na(positions))) {
-    rlang::warn("Missing reverse translations. Using short names.")
+
+  # Handle missing translations
+  if (anyNA(positions)) {
+    rlang::warn("Missing reverse translations. Using original short names.")
     longnames[is.na(positions)] <- v[is.na(positions)]
   }
+
   longnames
 }
 
