@@ -129,6 +129,13 @@ locations:
       - A24:B25
 ```
 
+We provide a json schema for the data guide, allowing you to check the
+validity of guides that you wrote. The schema is available in the
+package as
+`system.file("extdata", "excelguide_schema.json", package = "excelDataGuide")`.
+To check its validity against the schema you can use the [Polyglottal
+JSON Schema Validator](https://www.npmjs.com/package/pajv).
+
 ## Future work
 
 We want to provide guide and template structures for data types without
