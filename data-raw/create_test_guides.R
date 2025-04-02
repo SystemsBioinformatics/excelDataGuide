@@ -2,6 +2,7 @@
 
 sourcename <- "guide_competition_1_0_source.yml"
 targetname <- "guide_competition_1_0.yml"
+examplename <- "example_guide.yml"
 
 source <- yaml::read_yaml(file.path("data-raw", sourcename))
 
@@ -29,6 +30,7 @@ write_yaml_mod <- function(x, file) {
 
 # write the source file to the testdata folder
 write_yaml_mod(source, file.path("tests/testthat/testdata", targetname))
+write_yaml_mod(source, file.path("inst/extdata", examplename))
 
 # Take a list s and a list of index numbers and/or names x and return
 # a vector of index numbers in list s correspond to the index names and or

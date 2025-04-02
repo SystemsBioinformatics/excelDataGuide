@@ -22,13 +22,13 @@ knitr::opts_chunk$set(
 
 A *data reporting template* is a standardized spreadsheet file (in either xls or xlsx format) used for reporting and processing experimental data. These templates significantly reduce the time required for data analysis and encourage users to present their data in a structured format, minimizing errors and misinterpretations.
 
-The **excelDataGuide** package eliminates the need for users to write and maintain complex code for reading data from intricate spreadsheet DRTs. Additionally, it offers a robust framework for validating data, ensuring the correct data types are utilized, and facilitating data wrangling when necessary. This functionality supports *Interoperability* for DRTs, a key aspect of the [FAIR](https://www.go-fair.org/fair-principles/) principles.
+The **excelDataGuide** package eliminates the need for data analysts to write and maintain complex code for reading data from various complex spreadsheet DRTs. Additionally, it offers a robust framework for validating data, ensuring that the correct data types are utilized, and facilitating data wrangling when necessary. This functionality supports *Interoperability* for DRTs, a key aspect of the [FAIR](https://www.go-fair.org/fair-principles/) principles.
 
 The package features a user-friendly interface for extracting data from Excel files and converting it into R objects. It accommodates three types of data structures: key-value pairs, tabular data, and microplate-formatted data. The locations of these structures within the Excel template are specified by a **data guide**, which is a YAML file — a structured format that is both human- and machine-readable.
 
 ## Installation
 
-You can install the development version of excelDataGuide from [GitHub](https://github.com/) with:
+You can install the development version of excelDataGuide in a recent version of R from GitHub with:
 
 ``` r
 # install.packages("pak")
@@ -48,6 +48,50 @@ data <- read_data(datafile, guidefile)
 
 The output of the `read_data()` function is a list object the format of which is determined for a large part by the design of the data guide.
 
+## Details
+
+### Data guide
+
+The *data guide* is a human readable and editable file in [YAML](https://yaml.org/spec/1.2.2/) format that specifies the structure and location of the data in the Excel file. It contains a list of data types, each of which is defined by a name and a set of parameters. As the name suggests, the *data guide* is used by the **excelDataGuide** package as a guide to extract all indexed data from the Excel file and convert it into proper R objects. An example of part of a *data guide* is shown below:
+
+```
+guide.version: '1.0'
+template.name: competition
+template.min.version: '9.3'
+template.max.version: ~
+plate.format: 96
+locations:
+  - sheet: description
+    type: cells
+    varname: .template
+    translate: false
+    variables:
+      - name: version
+        cell: B2
+  - sheet: description
+    type: keyvalue
+    translate: true
+    atomicclass:
+      - character
+      - character
+      - character
+      - character
+      - character
+      - date
+      - character
+      - numeric
+      - character
+      - numeric
+      - character
+      - numeric
+      - character
+      - character
+    varname: metadata
+    ranges:
+      - A10:B21
+      - A24:B25
+```
+
 ## Future work
 
-We want to provide guide and template structures for data types without upper size limit, like time series with no pre-determined length.
+We want to provide guide and template structures for data types without upper size limit, typically time series with no pre-determined length.
