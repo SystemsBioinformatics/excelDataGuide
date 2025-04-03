@@ -38,3 +38,28 @@ test_that("function kvlist_to_table works", {
   guide <- list(otherstuff = list("a" = "A", "b" = "B"))
   expect_error(kvlist_to_table(kvlist, guide, reverse.translate = TRUE))
 })
+
+test_that("function coerce works", {
+  expect_equal(as.character(coerce(45748L, "date")), "2025-04-01")
+  expect_equal(as.character(coerce(as.Date("2025-04-01"), "date")), "2025-04-01")
+  expect_equal(coerce("45748", "integer"), 45748L)
+  expect_equal(coerce("45748", "numeric"), 45748)
+  expect_equal(coerce(45748L, "character"), "45748")
+  expect_equal(coerce("true", "logical"), TRUE)
+})
+
+test_that("Reading dates from an excel file yield correct dates", {
+  excel_file <- test_path("testdata/dates_linux.xlsx")
+  date1 <- readxl::read_excel(excel_file, sheet=1, range="A1:A2")
+  date2 <- readxl::read_excel(excel_file, sheet=1, range="B1:B2")
+  date3 <- readxl::read_excel(excel_file, sheet=1, range="C1:C2")
+  expect_equal(coerce(date1 |> dplyr::pull(1), "date"), as.Date("1962-10-27"))
+  expect_equal(coerce(date2 |> dplyr::pull(1), "date"), as.Date("1962-10-27"))
+  expect_equal(coerce(date3 |> dplyr::pull(1), "date"), as.Date("1962-10-27"))
+  date4 <- readxl::read_excel(excel_file, sheet=1, range="D1:D2")
+  date5 <- readxl::read_excel(excel_file, sheet=1, range="E1:E2")
+  date6 <- readxl::read_excel(excel_file, sheet=1, range="F1:F2")
+  expect_equal(coerce(date4 |> dplyr::pull(1), "date"), as.Date("2025-04-01"))
+  expect_equal(coerce(date5 |> dplyr::pull(1), "date"), as.Date("2025-04-01"))
+  expect_equal(coerce(date6 |> dplyr::pull(1), "date"), as.Date("2025-04-01"))
+})

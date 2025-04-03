@@ -112,6 +112,10 @@ coerce <- function(x, atomicclass) {
          "numeric" = as.numeric(x),
          "integer" = as.integer(x),
          "logical" = as.logical(x),
-         "date" = as.POSIXct(as.integer(x))
+         "date" = if (inherits(x, "POSIXct") || inherits(x, "Date")) {
+           as.Date(x)
+          } else {
+            as.Date(as.integer(x), origin="1899-12-30")
+          },
         )
 }
