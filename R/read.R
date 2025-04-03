@@ -150,9 +150,12 @@ read_key_plate <- function(drfile, sheet, ranges, translate = FALSE, translation
   if (length(atomicclass) == 1) {
     combined[] <- lapply(combined, coerce, atomicclass)
   } else {
+    # The first two columns are "row" and "col", added by the function plate_to_df
+    atomicclass <- c("character", "integer", atomicclass)
+
     if (length(atomicclass) != ncol(combined)) {
       rlang::abort(glue::glue(
-        "The number of atomic classes ({length(atomicclass)}) must be 1 or equal to the number of columns ({ncol(combined)}) in the combined data frame."
+        "The number of atomic classes ({length(atomicclass) - 2}) must be 1 or equal to the number of columns ({ncol(combined) - 2}) in the combined data frame."
       ))
     }
     combined[] <- Map(coerce, combined, atomicclass)

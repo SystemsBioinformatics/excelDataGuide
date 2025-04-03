@@ -37,8 +37,6 @@ locations:
     translate: false
     atomicclass:
       - character
-      - integer
-      - character
       - numeric
       - numeric
       - numeric
