@@ -16,9 +16,10 @@ write_yaml_mod <- function(x, file) {
   newtxt <- c()
   for (line in txt) {
     if (any(stringr::str_detect(line, "(ranges|cells): .+$"))) {
-      space <- stringr::str_extract(line, "(\\s+)(ranges:|cells:)\\s+(.+)$", group=1)
-      label <- stringr::str_extract(line, "(\\s+)(ranges:|cells:)\\s+(.+)$", group=2)
-      value <- stringr::str_extract(line, "(\\s+)(ranges:|cells:)\\s+(.+)$", group=3)
+      matches <- stringr::str_match(line, "(\\s+)(ranges:|cells:)\\s+(.+)$")
+      space <- matches[, 2]
+      label <- matches[, 3]
+      value <- matches[, 4]
       newtxt <- c(newtxt, paste0(space, label))
       newtxt <- c(newtxt, paste0(space, "  - ", value))
     } else {
