@@ -49,60 +49,21 @@ has_star <- function(x) {
 #' @param x A character vector
 #' @param atomicclass A character string indicating the atomic class
 #' @description
-#' We assume that the date is stored as a signed integer in excel, being the
-#' number of days passed since January 1 1970. When read by read_excel it seems
-#' to be converted to the number of seconds passed since January 1 1970. This
-#' is the same as the POSIXct class in R. Hence, we can convert this number `x`
-#' to a date again by using `as.POSIXct(x)` and
-#' `format(as.POSIXct(x, tz=""), format="%Y-%m-%d")` to get a string with format
-#' YYYY-MM-DD.
-#'
-#  TODO: check the previous and following statements
+#' About date conversion: read_excel() reads dates as the correct POSIXct object 
+#' when the excel field is formatted as a date. However, if the field is formatted
+#' as a number, it will be read as a numeric value. In this case, the conversion to
+#' a date object must be performed using the as.Date() function. The origin
+#' parameter must be set to "1899-12-30" to account for the fact that Excel
+#' calculates the epoch since January 1, 1900 and incorrecly assumes that 1900 was
+#' a leap year.
 #
 # ACCORDING TO Copilot:
-# ### **Analysis**:
-# 1. **Excel Date Storage**:
-#    - Excel does **not** store dates as the number of days since January 1, 1970. Instead:
-#      - Excel stores dates as the number of days since **January 1, 1900** (for Windows systems)
-#        or **January 1, 1904** (for macOS systems).
-#      - Excel also incorrectly assumes that 1900 was a leap year, which introduces an offset of
-#        1 day for dates before March 1, 1900.
-#
-# 2. **`read_excel` Behavior**:
-#    - When using `readxl::read_excel`, Excel dates are typically read as numeric values representing
-#      the number of days since Excel's epoch (e.g., 1900 or 1904). These values are **not
-#      automatically converted to POSIXct** by `read_excel`. The user must manually convert them.
-#
-# 3. **POSIXct Conversion**:
-#    - The description mentions converting the number to a date using `as.POSIXct(as.integer(x))`.
-#      However:
-#      - This assumes that the numeric value `x` is already in seconds since January 1, 1970, which
-#        is not the case for Excel dates.
-#      - To convert Excel dates to R's `POSIXct`, you need to account for Excel's epoch (e.g.,
-#        subtract the appropriate offset for 1900 or 1904).
-#
-# 4. **Formatting**:
-#    - The description correctly states that `format(as.POSIXct(x, tz=""), format="%Y-%m-%d")`
-#      can be used to format a `POSIXct` object as a string in the `YYYY-MM-DD` format.
-#
-# ### **Corrected Description**:
-# Here’s a revised and accurate version of the description:
-#
-# Excel stores dates as numeric values representing the number of days since
-# January 1, 1900 (Windows) or January 1, 1904 (macOS). Note that Excel's 1900
-# date system incorrectly assumes 1900 was a leap year, which introduces a
-# 1-day offset for dates before March 1, 1900.
-#
-# When read using `readxl::read_excel`, Excel dates are imported as numeric
-# values. To convert these to R's `POSIXct` class, you must account for Excel's
-# epoch. For example, subtract 25569 days (the number of days between January 1,
-# 1900, and January 1, 1970) and convert to seconds by multiplying by 86400.
-#
-# Example conversion:
-# `as.POSIXct((x - 25569) * 86400, origin = "1970-01-01", tz = "")`
-#
-# To format the date as a string in `YYYY-MM-DD` format, use:
-# `format(as.POSIXct(...), format = "%Y-%m-%d")`.
+# **Excel Date Storage**:
+#  - Excel does **not** store dates as the number of days since January 1, 1970. Instead:
+#    - Excel stores dates as the number of days since **January 1, 1900** (for Windows systems)
+#      or **January 1, 1904** (for macOS systems).
+#    - Excel also incorrectly assumes that 1900 was a leap year, which introduces an offset of
+#      1 day for dates before March 1, 1900.
 #
 #' @return A vector of the specified atomic class
 #' @noRd
