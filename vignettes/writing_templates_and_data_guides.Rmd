@@ -21,30 +21,33 @@ library(excelDataGuide)
 
 ## Introduction
 
-The spreadsheet is a widely used tool in the biochemical laboratory, both for 
-recording and analyzing experiments. When such experiments become a routine we 
-often create spreadsheet templates to save time and to structure our work.
+Spreadsheets are widely used in biochemical laboratories for both recording and
+analyzing experiments. When experiments become routine, spreadsheet templates 
+are often created to streamline workflows and ensure consistency.
 
-The goal of the excelDataGuide package is to be able to use Excel spreadsheets 
-as well as scripts as data analysis tools. Clearly, a scripting language 
-has more potential when it comes to analyzing large data sets, consisting of 
-multiple notebooks.
+The goal of the **excelDataGuide** package is to enable the use of Excel 
+spreadsheets alongside scripting environments as effective data analysis tools. 
+While scripting languages offer more flexibility and power—especially for 
+analyzing large datasets across multiple workbooks—the spreadsheet remains the
+**primary source of all data**.
 
-Importantly, **the source of all data is the spreadsheet.** This concerns 
-metadata, parameters like acceptance criteria, concentrations and measured data.
-This *one-source* policy guarantees that calculations in the spreadsheet and in
-the scripts are all based on the same underlying data and parameters.
+This **"single-source-of-truth"** approach ensures that both spreadsheet-based
+and script-based analyses rely on the same underlying data and parameters. 
+This includes:
 
-Parameters, like acceptance criteria, are determined in the SOP and fixed
-in the spreadsheet template, whereas other data may vary per experiment and is
-entered by the user. For example, when a user performs parameter fitting, it may
-be useful to compare the fitted parameters to those obtained in another 
-programming environment.
+- **Metadata**
+- **Experimental parameters** (e.g., acceptance criteria, concentrations)
+- **Measured data**
 
-Concerning calculated data it may or may not be useful to let the spreadsheet be
-the source of such data for the script as well. This may be particularly useful 
-when it concerns calculations that are carried out automatically upon entry
-of data by the user.
+Parameters such as acceptance criteria are typically defined by standard 
+operating procedures (SOPs) and fixed in the spreadsheet templates. Other 
+values, such as experimental measurements or fitted parameters, vary per 
+experiment and are entered by the user.
+
+In some cases, it may be beneficial for the script to also use 
+**calculated data** from the spreadsheet—especially when those calculations are
+automatically triggered upon user input. This decision depends on the specific
+analysis needs and the reliability of spreadsheet-based computations.
 
 ## Structuring a template
 
