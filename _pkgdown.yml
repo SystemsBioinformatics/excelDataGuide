@@ -1,4 +1,6 @@
 url: https://systemsbioinformatics.github.io/excelDataGuide/
 template:
   bootstrap: 5
-
+  bslib:
+    bootswatch: materia
+    pkgdown-nav-height: 100px
