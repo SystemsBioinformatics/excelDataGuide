@@ -4,3 +4,5 @@ template:
   bslib:
     bootswatch: materia
     pkgdown-nav-height: 100px
+env:
+  GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
