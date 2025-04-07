@@ -10,7 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  echo = FALSE
 )
 ```
 
@@ -47,22 +48,52 @@ of data by the user.
 
 ## Structuring a template
 
+To provide a link between the data structures of programming languages and 
+those in a spreadsheet we consider the following four types of data structures
+in a template:
+
+- **keyvalue**: a key-value pair, where the key is a variable name and the value
+  is the value of that variable. The key and value are placed in horizontally 
+  adjacent cells (columns). The key, or its translated short name (see below)
+  is to be used as the parameter name in the scripts and should conform to 
+  variable naming rules for the scripting language used. The key is found in 
+  the left-most cell of a cell range. The value can be a single value (one cell) 
+  or a vector of values (multiple cells).
+- **cells**: occasionally it may be more convenient to read values from single
+  cells and provide the keys (names) of the corresponding variables in the data 
+  guide. These data will be stored as key-value pairs, but in contrast to the 
+  **keyvalue** data type where a variable name is provided in the template
+  the data guide must provide a variable name.
+- **table**: tabular data where columns represent variables and rows represent
+  items in which these variables are assessed. Column names are written in the 
+  first row and are used as variable names.
+- **platedata**: data are registered in the same row-column format as the
+  microplate in which the experiment was performed. The first row contains the 
+  variable name in its left-most cell, and is followed by (integer) column names. 
+  Every subsequent row contains the row name (in capital letters) followed by the 
+  values for each well. Both variable name and data are read by the script. The 
+  column and row names are ignored. Therefore, the first row and column in the 
+  range could also be empty, except for the variable name. Plate data are stored
+  as tables in which, apart from the variables provided in the template two 
+  additional columns are added, namely row and column, corresponding to the row
+  and column in a microplate.
+
 Below is an example of the front page of a template (of the fitc-t4 TTR assay),
 illustrating a number of ideas and concepts that we discuss below.
 
-![front page](images/template_frontpage.png){width=100%}
+```{r, out.width="100%", fig.cap="First page of a template"}
+knitr::include_graphics("images/template_frontpage.png")
+```
 
-### A template must have a version number
+### A template has a version number
 
 Unique template version numbers are a way to prevent misunderstandings 
 between users and are also needed here to check whether a data guide is 
 compatible with the template version. 
 
-#### Version numbering rules
-
-We follow the R-package version rules. A version number has the structure
-**<kbd>major.minor</kbd>** or **<kbd>major.minor.patch</kbd>**, where
-<kbd>major</kbd>, <kbd>minor</kbd> and <kbd>patch</kbd> are each 
+**Version numbering rules**. We follow the R-package version rules. A version 
+number has the structure <kbd>major.minor</kbd> or <kbd>major.minor.patch</kbd>,
+where <kbd>major</kbd>, <kbd>minor</kbd> and <kbd>patch</kbd> are each 
 integer values. A version consisting of only a major number is invalid, but 
 will be interpreted as having a minor version <kbd>0</kbd>, *i.e.* a version
 "<kbd>2</kbd>" will be interpreted as "<kbd>2.0</kbd>".
@@ -70,14 +101,11 @@ will be interpreted as having a minor version <kbd>0</kbd>, *i.e.* a version
 In practice this means that the format of the cell in which the version number
 is recorded should be *text*, and not *general* or *number*
 
-#### A template name is optional 
+**A template name is optional**. Preferably, a template also has a name. Note 
+that the example in the figure above doesn't have a name.
 
-Preferably, a template also has a name. Note that the example in the figure 
-above doesn't have a name.
-
-#### Checking compatibilty of template versions and a guide version
-
-We use template version numbers to check compatibility with a guide. In principle
+**Checking compatibilty of template versions and a guide version**. We use 
+template version numbers to check compatibility with a guide. In principle
 the same guide can be used for multiple versions of a template as long as the 
 locations and names of variables indexed in the guide did not change. This is the 
 case when, for example, only explanatory texts or calculations or data validity
@@ -105,7 +133,10 @@ the data is entered.
 
 ### A single source of parameters
 
-![The parameters as key-value pairs](images/parameters.png){width=35%}
+```{r, out.width="40%", fig.align='center', fig.cap="The parameters as key-value pairs"}
+knitr::include_graphics("images/parameters.png")
+```
+
 
 Parameters needed for calculations, for example for acceptance criteria of 
 measurements are best entered on a separate sheet, and referred to by absolute
@@ -116,35 +147,13 @@ well.
 
 ### Use of hidden worksheets for data transfer
 
-![A hidden sheet with links to plate-formetted data](images/data.png){width=100%}
 
+```{r, out.width="100%", fig.align='center', fig.cap="A hidden sheet with links to plate-formatted data"}
+knitr::include_graphics("images/data.png")
+```
 
 
 ## What else?
-
-To facilitate automatic reading from the spreadsheet by scripts data must be 
-in either of these four formats:
-
-- **keyvalue** format. Here, the key and value are placed in horizontally 
-adjacent cells (columns). The key, or its translated short name (see below)
-is to be used as the parameter name in the
-scripts and should conform to variable naming rules for the scripting language
-used. The key is found in the left-most cell of a cell range. The value can be a
-single value (one cell) or a vector of values (multiple cells).
-- **platedata** format. Here the data are registered in the same row-column 
-format as the microplate in which the experiment was performed. The first row
-contains the variable name in its left-most cell, and is followed by (integer) 
-column names. Every subsequent row contains the row name (in capital letters) 
-followed by the values for each well. Both variable name and data are read by 
-the script. The column and row names are ignored. Therefore, the first row 
-and column in the range could also be empty, except for the variable name. 
-- **table** format. This is the format for tabular data where columns represent
-variables and rows represent items in which these variables are assessed. Column
-names are written in the first row.
-- **cells** format. Occasionally it may be more convenient to read values from 
-single cells and provide the keys (names) of the corresponding variables in the
-data guide.
- 
 
 The keyvalue format will be mostly used for metadata and parameters. All keyvalue 
 will be aggregated in a single named list called "keyvalue".
