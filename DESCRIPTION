@@ -28,7 +28,7 @@ Imports:
     tibble,
     yaml
 VignetteBuilder: knitr
-URL: https://github.com/douwe/excelDataGuide, https://systemsbioinformatics.github.io/excelDataGuide/
+URL: https://systemsbioinformatics.github.io/excelDataGuide/
 BugReports: https://github.com/douwe/excelDataGuide/issues
 Depends: 
     R (>= 3.5)
