@@ -252,6 +252,7 @@ read_data <- function(drfile, guide, checkname = FALSE) {
       rlang::abort(glue::glue("Unsupported location type: {location$type}"))
     )
 
+    # The default atomic class is "character"
     atomicclass <- if (!is.null(location$atomicclass)) location$atomicclass else "character"
 
     # Read data using the appropriate function
