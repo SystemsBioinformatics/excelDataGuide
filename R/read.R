@@ -252,7 +252,7 @@ read_data <- function(drfile, guide, checkname = FALSE) {
       rlang::abort(glue::glue("Unsupported location type: {location$type}"))
     )
 
-    atomicclass <- location$atomicclass %||% "character"
+    atomicclass <- if (!is.null(location$atomicclass)) location$atomicclass else "character"
 
     # Read data using the appropriate function
     chunk <- if (location$type == "cells") {
