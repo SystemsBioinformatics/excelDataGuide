@@ -7,7 +7,6 @@
 "plate.format"!         : #Plateformat
 "locations"!            : [...#Location]
 "translations"          : [...#Translation]
-   
 
 #Version: =~ "^\\d+\\.\\d+$" // Only version numbers in major.minor format allowed
 
