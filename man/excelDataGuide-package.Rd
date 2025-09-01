@@ -12,6 +12,7 @@ Provides functions as well as a YAML guide format to facilitate reading data fro
 Useful links:
 \itemize{
   \item \url{https://github.com/douwe/excelDataGuide}
+  \item \url{https://systemsbioinformatics.github.io/excelDataGuide/}
   \item Report bugs at \url{https://github.com/douwe/excelDataGuide/issues}
 }
 

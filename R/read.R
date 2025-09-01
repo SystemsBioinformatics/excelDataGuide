@@ -252,7 +252,8 @@ read_data <- function(drfile, guide, checkname = FALSE) {
       rlang::abort(glue::glue("Unsupported location type: {location$type}"))
     )
 
-    atomicclass <- location$atomicclass %||% "character"
+    # The default atomic class is "character"
+    atomicclass <- if (!is.null(location$atomicclass)) location$atomicclass else "character"
 
     # Read data using the appropriate function
     chunk <- if (location$type == "cells") {
@@ -324,9 +325,10 @@ combine_results <- function(existing, chunk, type) {
 #' @noRd
 validate_template_version <- function(template_version, guide) {
   if (grepl("^\\d+$", template_version)) {
+    template_version_curr <- template_version
     template_version <- paste0(template_version, ".0")
     rlang::warn(glue::glue(
-      "Incorrectly formatted template version number '{template_version}'. Version numbers must have a minor number. Interpreting as '{template_version}'."
+      "Incorrectly formatted template version number '{template_version_curr}'. Version numbers must have a minor number. Interpreting as '{template_version}'."
     ))
   }
 
