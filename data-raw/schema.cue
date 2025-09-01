@@ -1,4 +1,4 @@
-// usage: cue vet -c schema.cue file.yml 
+// usage: cue vet -c schema.cue file.yml
 
 "guide.version"!        : #Version
 "template.name"!        : string
@@ -10,7 +10,7 @@
 
 #Version: =~ "^\\d+\\.\\d+$" // Only version numbers in major.minor format allowed
 
-#Plateformat: 96 | 384
+#Plateformat: 24 | 48 | 96 | 384
 
 //#AnyLocation: {
 //    "sheet"!       : string
