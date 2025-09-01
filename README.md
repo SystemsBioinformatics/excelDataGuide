@@ -4,6 +4,7 @@
 # excelDataGuide
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 **excelDataGuide** is an R package designed to streamline the process of
@@ -129,13 +130,13 @@ locations:
       - A24:B25
 ```
 
-We provide a json schema for the data guide, allowing you to check the
+We provide a cue schema for the data guide, allowing you to check the
 validity of guides that you wrote. The schema is available in the
 package as
-`system.file("extdata", "excelguide_schema.json", package = "excelDataGuide")`.
-To check its validity against the schema you can use the [Polyglottal
-JSON Schema Validator](https://www.npmjs.com/package/pajv). More details
-can be found in the vignette (to be done, see below).
+`system.file("extdata", "excelguide_schema.cue", package = "excelDataGuide")`.
+To check its validity against the schema you can use the
+[CUE](https://cuelang.org/docs/) validator. More details can be found in
+the vignette (to be done, see below).
 
 ## Future work
 
