@@ -186,7 +186,9 @@ long_to_shortnames <- function(v, translations) {
   # Handle missing translations
   missing_indices <- is.na(positions)
   if (any(missing_indices)) {
-    rlang::warn("Missing translations. Using original long names.")
+    missing_translations <- paste0(translations$long[missing_indices], collapse=", ")
+    rlang::warn(glue::glue("Missing translations: {missing_translations}."))
+    rlang::warn("Will use original long names.")
     shortnames[missing_indices] <- v[missing_indices]
   }
 
