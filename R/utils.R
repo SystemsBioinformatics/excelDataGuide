@@ -44,12 +44,64 @@ has_star <- function(x) {
   stringr::str_detect(x, "[*x?]")
 }
 
+#' Helper for coercion to obtain decent messages when coercion does not work
+#' @noRd
+check_coerce <- function(x, cofun, atomicclass) {
+  result <- suppressWarnings(do.call(cofun, list(x)))
+  failures = is.na(result) & !is.na(x)
+  if (any(failures)) {
+      wrong <- paste0("'", x[failures], "'", collapse = ", ")
+      rlang::warn(c(glue::glue("Expected {atomicclass} values but obtained {wrong}"), i="Replacing with NA"), use_cli_format = TRUE)
+  }
+  return(result)
+}
+
+#' Helper function for coercion to date
+#' Dates are evil
+#' @noRd
+asdate <- function(x) {
+  # Excel origin date
+  excel_origin <- "1899-12-30"
+
+  if (is.integer(x) || is.numeric(x)) {
+    return(as.Date(as.integer(x), origin = excel_origin))
+  }
+
+  if (inherits(x, "POSIXct") || inherits(x, "Date")) {
+    return(as.Date(x))
+  }
+
+  if (is.character(x)) {
+    trynumeric <- suppressMessages(as.numeric(x))
+    if (!anyNA(trynumeric)) {
+      return(as.Date(as.integer(trynumeric), origin = excel_origin))
+    } else {
+      # Try to parse as Date, catch errors
+      tryCatch(
+        as.Date(x),
+        error = function(e) {
+          rlang::warn(c(
+            glue::glue("Can't convert character '{x}' to Date: {e$message}"),
+            "i" = "Returning NA"
+          ), use_cli_format = TRUE)
+          as.Date(NA)
+        }
+      )
+    }
+  } else {
+    rlang::warn(c(
+      glue::glue("Can't convert object of class {class(x)} to Date"),
+      "i" = "Returning NA"
+    ), use_cli_format = TRUE)
+    as.Date(NA)
+  }
+}
 
 #' Coerce a character vector based on atomicclass
 #' @param x A character vector
 #' @param atomicclass A character string indicating the atomic class
 #' @description
-#' About date conversion: read_excel() reads dates as the correct POSIXct object 
+#' About date conversion: read_excel() reads dates as the correct POSIXct object
 #' when the excel field is formatted as a date. However, if the field is formatted
 #' as a number, it will be read as a numeric value. In this case, the conversion to
 #' a date object must be performed using the as.Date() function. The origin
@@ -70,13 +122,9 @@ has_star <- function(x) {
 coerce <- function(x, atomicclass) {
   switch(atomicclass,
          "character" = as.character(x),
-         "numeric" = as.numeric(x),
-         "integer" = as.integer(x),
-         "logical" = as.logical(x),
-         "date" = if (inherits(x, "POSIXct") || inherits(x, "Date")) {
-           as.Date(x)
-          } else {
-            as.Date(as.integer(x), origin="1899-12-30")
-          },
+         "numeric" = check_coerce(x, "as.numeric", "numeric"),
+         "integer" = check_coerce(x, "as.integer", "integer"),
+         "logical" = check_coerce(x, "as.logical", "logical"),
+         "date" = check_coerce(x, "asdate", "date"),
         )
 }
