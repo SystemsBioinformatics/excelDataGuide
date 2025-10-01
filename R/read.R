@@ -170,6 +170,7 @@ read_key_plate <- function(drfile, sheet, ranges, translate = FALSE, translation
 }
 
 #' Translation function generator
+#' This function generates either the function `long_to_shortnames` or `short_to_longnames`
 #' @noRd
 gentranslator <- function(type = 'long-short') {
   stopifnot(type %in% c('long-short', 'short-long'))
@@ -183,11 +184,10 @@ gentranslator <- function(type = 'long-short') {
   function(v, translations) {
     matchdf <- data.frame(v)
     names(matchdf) <- col_from
-    matches <- dplyr::left_join(matchdf, translations)
+    matches <- dplyr::left_join(matchdf, translations, by = {{col_from}})
     if (any(is.na(matches[[col_to]]))) {
       missing_translations <- paste0("'", matches[[col_from]][is.na(matches[[col_to]])], "'", collapse=", ")
-      rlang::warn(glue::glue("Missing translations for: {missing_translations}."))
-      rlang::warn(glue::glue("Will use original {col_from} names."))
+      rlang::warn(c(glue::glue("Missing translations for: {missing_translations}."), "i" = glue::glue("Will use original {col_from} names.")), use_cli_format = TRUE)
       matches[[col_to]][is.na(matches[[col_to]])] <- matches[[col_from]][is.na(matches[[col_to]])]
     }
     return(matches[[col_to]])
@@ -200,43 +200,14 @@ gentranslator <- function(type = 'long-short') {
 #' Translate between long and short variable names. If a translation is missing the original
 #' variable long or short variable name from `v` is returned.
 #' @param v A vector of variable names
-#' @param translations A named vector with long variable names as names and short variable names as values
+#' @param translations A table of translations with columns `long` and `short`
 #' @return A vector of long or short variable names
 #' @export
-# long_to_shortnames <- function(v, translations) {
-#   # Match long names to their corresponding short names
-#   positions <- match(v, translations$long)
-#   shortnames <- translations$short[positions]
-#
-#   # Handle missing translations
-#   missing_indices <- is.na(positions)
-#   if (any(missing_indices)) {
-#     missing_translations <- paste0("'", translations$long[missing_indices], "'", collapse=", ")
-#     rlang::warn(glue::glue("Missing translations: {missing_translations}."))
-#     rlang::warn("Will use original long names.")
-#     shortnames[missing_indices] <- v[missing_indices]
-#   }
-#
-#   shortnames
-# }
 long_to_shortnames <- gentranslator('long-short')
 
 #' @return A vector of long variable names
 #' @rdname long_to_shortnames
 #' @export
-# short_to_longnames <- function(v, translations) {
-#   # Match short names to their corresponding long names
-#   positions <- match(v, translations$short)
-#   longnames <- translations$long[positions]
-#
-#   # Handle missing translations
-#   if (anyNA(positions)) {
-#     rlang::warn("Missing reverse translations. Using original short names.")
-#     longnames[is.na(positions)] <- v[is.na(positions)]
-#   }
-#
-#   longnames
-# }
 short_to_longnames <- gentranslator('short-long')
 
 

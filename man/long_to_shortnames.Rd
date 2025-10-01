@@ -12,7 +12,7 @@ short_to_longnames(v, translations)
 \arguments{
 \item{v}{A vector of variable names}
 
-\item{translations}{A named vector with long variable names as names and short variable names as values}
+\item{translations}{A table of translations with columns \code{long} and \code{short}}
 }
 \value{
 A vector of long or short variable names
