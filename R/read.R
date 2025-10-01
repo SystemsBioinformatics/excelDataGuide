@@ -286,7 +286,23 @@ read_data <- function(drfile, guide, checkname = FALSE) {
   }
 
   # Validate template version
-  validate_template_version(result$cells$.template$version, guide)
+  if (exists("cells", where = result)) {
+    if (exists(".template", where = result$cells)) {
+      if (exists("version", where = result$cells$.template)) {
+        validate_template_version(result$cells$.template$version, guide)
+      }
+    }
+  } else {
+    if (exists("keyvalue", where = result)) {
+      if (exists(".template", where = result$keyvalue)) {
+        if (exists("version", where = result$keyvalue$.template)) {
+          validate_template_version(result$keyvalue$.template$version, guide)
+        }
+      }
+    } else {
+      rlang::abort("Variable '.template$version' not found under cells or keyvalue variables")
+    }
+  }
 
   # Check template name if required
   if (checkname && guide$template.name != result$template.metadata$template.name) {
