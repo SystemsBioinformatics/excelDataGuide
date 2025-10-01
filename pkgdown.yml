@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   writing_templates_and_data_guides: writing_templates_and_data_guides.html
-last_built: 2025-10-01T10:57Z
+last_built: 2025-10-01T13:07Z
 urls:
   reference: https://systemsbioinformatics.github.io/excelDataGuide/reference
   article: https://systemsbioinformatics.github.io/excelDataGuide/articles
