@@ -31,5 +31,5 @@ VignetteBuilder: knitr
 URL: https://systemsbioinformatics.github.io/excelDataGuide/
 BugReports: https://github.com/douwe/excelDataGuide/issues
 Depends: 
-    R (>= 3.5)
+    R (>= 4.1.0)
 LazyData: true
