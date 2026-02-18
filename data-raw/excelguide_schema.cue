@@ -14,11 +14,10 @@
 "translations": [...#Translation]
 
 // Version constraint: must be in major.minor format (e.g., "1.0", "2.3")
-#Version: string
-#Version: =~"^\\d+\\.\\d+$" | _|_("Version must be in major.minor format (e.g., '1.0' or '2.3')")
+#Version: =~"^\\d+\\.\\d+$"
 
-// Valid plate formats for laboratory experiments
-#Plateformat: 24 | 48 | 96 | 384 | _|_("Plate format must be one of: 24, 48, 96, or 384")
+// Valid plate formats for laboratory experiments (must be one of: 24, 48, 96, or 384)
+#Plateformat: 24 | 48 | 96 | 384
 
 // Common fields shared by all location types
 #AnyLocation: {
@@ -31,6 +30,9 @@
 	// Whether to apply translations to extracted values (default: false)
 	"translate"?: bool | *false
 
+	// Optional atomic class specification for type coercion
+	"atomicclass"?: #Atom | [...#Atom] | *"character"
+
 	// Allow additional fields for specific location types
 	...
 }
@@ -42,9 +44,6 @@
 
 	// List of variables to extract, each with a name and cell reference
 	"variables"!: [...#Variable]
-
-	// Optional atomic class specification for type coercion
-	"atomicclass"?: #Atom | [...#Atom] | *"character"
 }
 
 // Range-based location: extracts data from rectangular ranges
@@ -57,9 +56,6 @@
 
 	// List of cell ranges to extract (e.g., "A1:B10")
 	"ranges"!: [...#Range]
-
-	// Optional atomic class specification for type coercion
-	"atomicclass"?: #Atom | [...#Atom] | *"character"
 }
 
 // A location can be either cell-based or range-based
@@ -83,17 +79,16 @@
 	"long"!: string
 }
 
-// Atomic data types for type coercion
-#Atom: "character" | "date" | "numeric" | _|_("Atomic class must be one of: 'character', 'date', or 'numeric'")
+// Atomic data types for type coercion (must be one of: 'character', 'date', or 'numeric')
+#Atom: "character" | "date" | "numeric"
 
 // Valid spreadsheet range format (e.g., "A1:B10", "C5:Z20")
-#Range: string
-#Range: =~"^[A-Z]+\\d+:[A-Z]+\\d+$" | _|_("Range must be in format 'A1:B10' (uppercase letters followed by numbers)")
+// Must be uppercase letters followed by numbers, colon, then uppercase letters followed by numbers
+#Range: =~"^[A-Z]+\\d+:[A-Z]+\\d+$"
 
 // Valid spreadsheet cell reference (e.g., "A1", "B23", "Z99")
-#Cell: string
-#Cell: =~"^[A-Z]+\\d+$" | _|_("Cell reference must be in format 'A1' (uppercase letters followed by numbers)")
+// Must be uppercase letters followed by numbers
+#Cell: =~"^[A-Z]+\\d+$"
 
 // Variable names cannot contain whitespace characters
-#VariableName: string
-#VariableName: =~"[^\\s]" | _|_("Variable names cannot contain whitespace characters")
+#VariableName: =~"[^\\s]"
