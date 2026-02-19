@@ -24,7 +24,9 @@ read_guide <- function(path) {
     # Ensure reserved 'File path' and '.sourcefile' mapping
     if (!(".sourcefile" %in% guide$translations$short)) {
       if ("File path" %in% guide$translations$long) {
-        rlang::abort("The 'long' variable name 'File path' is reserved for the 'short' name '.sourcefile' exclusively.")
+        rlang::abort(
+          "The 'long' variable name 'File path' is reserved for the 'short' name '.sourcefile' exclusively."
+        )
       }
       guide$translations <- dplyr::bind_rows(
         guide$translations,
@@ -80,10 +82,14 @@ check_guide <- function(guide) {
 #'
 validate_plate_format <- function(guide) {
   if (!"plate.format" %in% names(guide)) {
-    rlang::abort("The spreadsheet guide must contain the 'plate.format' element when 'platedata' is present in the locations.")
+    rlang::abort(
+      "The spreadsheet guide must contain the 'plate.format' element when 'platedata' is present in the locations."
+    )
   }
   if (!(as.character(guide$plate.format) %in% names(.plateformats))) {
-    rlang::abort(glue::glue("The plate format in the spreadsheet guide is not valid. It must be one of '24', '48', '96', or '384'."))
+    rlang::abort(glue::glue(
+      "The plate format in the spreadsheet guide is not valid. It must be one of '24', '48', '96', or '384'."
+    ))
   }
 }
 
@@ -121,7 +127,7 @@ validate_platedata_ranges <- function(ranges, plate_format) {
 #' @param ranges A list of ranges for cells
 #' @return An error message or nothing
 #' @noRd
-#' 
+#'
 validate_cells <- function(ranges) {
   dims <- dim(cellranger::as.cell_limits(ranges[1]))
   # TODO: add additional validation logic for cells if needed
@@ -136,7 +142,9 @@ validate_cells <- function(ranges) {
 #'
 check_dim <- function(range, required_rows = NA, required_cols = NA) {
   if (is.na(required_rows) && is.na(required_cols)) {
-    rlang::abort("You must specify at least one of 'required_rows' or 'required_cols'.")
+    rlang::abort(
+      "You must specify at least one of 'required_rows' or 'required_cols'."
+    )
   }
 
   dims <- dim(cellranger::as.cell_limits(range))

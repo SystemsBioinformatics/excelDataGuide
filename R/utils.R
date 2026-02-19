@@ -11,12 +11,17 @@
 #' @export
 kvlist_to_table <- function(kvlist, guide, reverse.translate = TRUE) {
   if (reverse.translate && !("translations" %in% names(guide))) {
-    rlang::abort("There are no translations in the guide. If reverse.translate is TRUE, translations must be provided")
+    rlang::abort(
+      "There are no translations in the guide. If reverse.translate is TRUE, translations must be provided"
+    )
   }
-  tbl <- tibble::tibble(key = names(kvlist), value = as.vector(unlist(lapply(kvlist, paste0, collapse=", "))))
+  tbl <- tibble::tibble(
+    key = names(kvlist),
+    value = as.vector(unlist(lapply(kvlist, paste0, collapse = ", ")))
+  )
   if (reverse.translate) {
     tbl <- tbl |>
-      dplyr::mutate (key = short_to_longnames(.data$key, guide$translations))
+      dplyr::mutate(key = short_to_longnames(.data$key, guide$translations))
   }
   tbl
 }
@@ -50,8 +55,14 @@ check_coerce <- function(x, cofun, atomicclass) {
   result <- suppressWarnings(do.call(cofun, list(x)))
   failures = is.na(result) & !is.na(x)
   if (any(failures)) {
-      wrong <- paste0("'", x[failures], "'", collapse = ", ")
-      rlang::warn(c(glue::glue("Expected {atomicclass} values but obtained {wrong}"), i="Replacing with NA"), use_cli_format = TRUE)
+    wrong <- paste0("'", x[failures], "'", collapse = ", ")
+    rlang::warn(
+      c(
+        glue::glue("Expected {atomicclass} values but obtained {wrong}"),
+        i = "Replacing with NA"
+      ),
+      use_cli_format = TRUE
+    )
   }
   return(result)
 }
@@ -80,19 +91,25 @@ asdate <- function(x) {
       tryCatch(
         as.Date(x),
         error = function(e) {
-          rlang::warn(c(
-            glue::glue("Can't convert character '{x}' to Date: {e$message}"),
-            "i" = "Returning NA"
-          ), use_cli_format = TRUE)
+          rlang::warn(
+            c(
+              glue::glue("Can't convert character '{x}' to Date: {e$message}"),
+              "i" = "Returning NA"
+            ),
+            use_cli_format = TRUE
+          )
           as.Date(NA)
         }
       )
     }
   } else {
-    rlang::warn(c(
-      glue::glue("Can't convert object of class {class(x)} to Date"),
-      "i" = "Returning NA"
-    ), use_cli_format = TRUE)
+    rlang::warn(
+      c(
+        glue::glue("Can't convert object of class {class(x)} to Date"),
+        "i" = "Returning NA"
+      ),
+      use_cli_format = TRUE
+    )
     as.Date(NA)
   }
 }
@@ -120,11 +137,12 @@ asdate <- function(x) {
 #' @return A vector of the specified atomic class
 #' @noRd
 coerce <- function(x, atomicclass) {
-  switch(atomicclass,
-         "character" = as.character(x),
-         "numeric" = check_coerce(x, "as.numeric", "numeric"),
-         "integer" = check_coerce(x, "as.integer", "integer"),
-         "logical" = check_coerce(x, "as.logical", "logical"),
-         "date" = check_coerce(x, "asdate", "date"),
-        )
+  switch(
+    atomicclass,
+    "character" = as.character(x),
+    "numeric" = check_coerce(x, "as.numeric", "numeric"),
+    "integer" = check_coerce(x, "as.integer", "integer"),
+    "logical" = check_coerce(x, "as.logical", "logical"),
+    "date" = check_coerce(x, "asdate", "date"),
+  )
 }

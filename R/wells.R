@@ -43,7 +43,7 @@ normalize_wells <- function(v, format = NULL) {
 #' @param returnerror A logical value indicating if the function should throw an error
 #' @return A vector with well names or `NA` values
 #' @noRd
-#' 
+#'
 check_wells <- function(wells, format, returnerror = TRUE) {
   format <- as.character(format)
 
@@ -57,7 +57,9 @@ check_wells <- function(wells, format, returnerror = TRUE) {
 
   # Ensure wells is a character vector
   if (!is.character(wells)) {
-    rlang::abort("Invalid 'wells' argument {wells}. The 'wells' argument must be a character vector.")
+    rlang::abort(
+      "Invalid 'wells' argument {wells}. The 'wells' argument must be a character vector."
+    )
   }
 
   # Identify invalid wells
@@ -66,7 +68,9 @@ check_wells <- function(wells, format, returnerror = TRUE) {
   # Handle invalid wells
   if (any(invalid_wells)) {
     if (returnerror) {
-      rlang::abort(glue::glue("The following wells are invalid for the {format}-well format: {paste(wells[invalid_wells], collapse = ', ')}"))
+      rlang::abort(glue::glue(
+        "The following wells are invalid for the {format}-well format: {paste(wells[invalid_wells], collapse = ', ')}"
+      ))
     } else {
       wells[invalid_wells] <- NA
     }
@@ -108,7 +112,7 @@ well_from_rowcol <- function(row, col) {
 #' rowcol_from_well(c("A1", "B2", "C3", NA), 48)
 #' # The order is preserved
 #' rowcol_from_well(c("H12", "A1"), 96)
-#' 
+#'
 rowcol_from_well <- function(well, format) {
   format <- as.character(format)
 
@@ -118,16 +122,22 @@ rowcol_from_well <- function(well, format) {
   }
   if (!format %in% names(.plateformats)) {
     valid_formats <- paste(names(.plateformats), collapse = ", ")
-    rlang::abort(glue::glue("Invalid plate format. Must be one of: {valid_formats}."))
+    rlang::abort(glue::glue(
+      "Invalid plate format. Must be one of: {valid_formats}."
+    ))
   }
 
   # Validate well names
   if (!is.character(well)) {
     rlang::abort("The 'well' parameter must be a character vector.")
   }
-  invalid_wells <- well[!is.na(well) & !(well %in% .plateformats[[format]]$wellnames)]
+  invalid_wells <- well[
+    !is.na(well) & !(well %in% .plateformats[[format]]$wellnames)
+  ]
   if (length(invalid_wells) > 0) {
-    rlang::abort(glue::glue("The following wells are invalid for the {format}-well format: {paste(invalid_wells, collapse = ', ')}"))
+    rlang::abort(glue::glue(
+      "The following wells are invalid for the {format}-well format: {paste(invalid_wells, collapse = ', ')}"
+    ))
   }
 
   # Map wells to rows and columns

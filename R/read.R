@@ -8,7 +8,14 @@
 #' @return A named list
 #' @noRd
 #'
-read_cells <- function(drfile, sheet, variables, translate = FALSE, translations = NULL, atomicclass = 'character') {
+read_cells <- function(
+  drfile,
+  sheet,
+  variables,
+  translate = FALSE,
+  translations = NULL,
+  atomicclass = 'character'
+) {
   # Process each variable
   result <- lapply(variables, function(v) {
     # Ensure the cell address points to a single cell
@@ -18,7 +25,12 @@ read_cells <- function(drfile, sheet, variables, translate = FALSE, translations
 
     # Read the cell value
     cell_data <- suppressMessages(
-      readxl::read_excel(drfile, sheet = sheet, range = v$cell, col_names = FALSE)
+      readxl::read_excel(
+        drfile,
+        sheet = sheet,
+        range = v$cell,
+        col_names = FALSE
+      )
     )
 
     # Handle empty cells
@@ -53,11 +65,25 @@ read_cells <- function(drfile, sheet, variables, translate = FALSE, translations
 #' @return A named list. Values are coerced to character
 #' @noRd
 #'
-read_keyvalue <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
+read_keyvalue <- function(
+  drfile,
+  sheet,
+  ranges,
+  translate = FALSE,
+  translations = NULL,
+  atomicclass = "character",
+  ...
+) {
   # Read and combine key-value pairs from the specified ranges
   kvtable <- lapply(ranges, function(range) {
-    readxl::read_excel(drfile, sheet = sheet, range = range, col_names = c("key", "value"))
-  }) |> dplyr::bind_rows()
+    readxl::read_excel(
+      drfile,
+      sheet = sheet,
+      range = range,
+      col_names = c("key", "value")
+    )
+  }) |>
+    dplyr::bind_rows()
 
   # Translate keys if required
   if (translate) {
@@ -88,18 +114,29 @@ read_keyvalue <- function(drfile, sheet, ranges, translate = FALSE, translations
 #' @return A data frame in long format
 #' @noRd
 #'
-read_table <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
+read_table <- function(
+  drfile,
+  sheet,
+  ranges,
+  translate = FALSE,
+  translations = NULL,
+  atomicclass = "character",
+  ...
+) {
   # Read and combine data from the specified ranges
   tbl <- lapply(ranges, function(range) {
     readxl::read_excel(drfile, sheet = sheet, range = range)
-  }) |> dplyr::bind_rows()
+  }) |>
+    dplyr::bind_rows()
 
   # Coerce columns to the specified atomic class
   if (length(atomicclass) == 1) {
     tbl[] <- lapply(tbl, coerce, atomicclass)
   } else {
     if (length(atomicclass) != ncol(tbl)) {
-      rlang::abort("The number of atomic classes must be 1 or equal to the number of columns in the table.")
+      rlang::abort(
+        "The number of atomic classes must be 1 or equal to the number of columns in the table."
+      )
     }
     tbl[] <- Map(coerce, tbl, atomicclass)
   }
@@ -136,11 +173,20 @@ plate_to_df <- function(d) {
 #' @inherit read_keyvalue
 #' @return A data frame in long format
 #' @noRd
-read_key_plate <- function(drfile, sheet, ranges, translate = FALSE, translations = NULL, atomicclass = "character", ...) {
+read_key_plate <- function(
+  drfile,
+  sheet,
+  ranges,
+  translate = FALSE,
+  translations = NULL,
+  atomicclass = "character",
+  ...
+) {
   # Read and convert each range to a long-format data frame
   chunks <- lapply(ranges, function(range) {
     plate <- readxl::read_excel(drfile, sheet = sheet, range = range) |>
       plate_to_df()
+    plate
   })
 
   # Combine all chunks into a single data frame
@@ -184,11 +230,24 @@ gentranslator <- function(type = 'long-short') {
   function(v, translations) {
     matchdf <- data.frame(v)
     names(matchdf) <- col_from
-    matches <- dplyr::left_join(matchdf, translations, by = {{col_from}})
+    matches <- dplyr::left_join(matchdf, translations, by = {{ col_from }})
     if (any(is.na(matches[[col_to]]))) {
-      missing_translations <- paste0("'", matches[[col_from]][is.na(matches[[col_to]])], "'", collapse=", ")
-      rlang::warn(c(glue::glue("Missing translations for: {missing_translations}."), "i" = glue::glue("Will use original {col_from} names.")), use_cli_format = TRUE)
-      matches[[col_to]][is.na(matches[[col_to]])] <- matches[[col_from]][is.na(matches[[col_to]])]
+      missing_translations <- paste0(
+        "'",
+        matches[[col_from]][is.na(matches[[col_to]])],
+        "'",
+        collapse = ", "
+      )
+      rlang::warn(
+        c(
+          glue::glue("Missing translations for: {missing_translations}."),
+          "i" = glue::glue("Will use original {col_from} names.")
+        ),
+        use_cli_format = TRUE
+      )
+      matches[[col_to]][is.na(matches[[col_to]])] <- matches[[
+        col_from
+      ]][is.na(matches[[col_to]])]
     }
     return(matches[[col_to]])
   }
@@ -254,7 +313,11 @@ read_data <- function(drfile, guide, checkname = FALSE) {
     )
 
     # The default atomic class is "character"
-    atomicclass <- if (!is.null(location$atomicclass)) location$atomicclass else "character"
+    atomicclass <- if (!is.null(location$atomicclass)) {
+      location$atomicclass
+    } else {
+      "character"
+    }
 
     # Read data using the appropriate function
     chunk <- if (location$type == "cells") {
@@ -300,12 +363,16 @@ read_data <- function(drfile, guide, checkname = FALSE) {
         }
       }
     } else {
-      rlang::abort("Variable '.template$version' not found under cells or keyvalue variables")
+      rlang::abort(
+        "Variable '.template$version' not found under cells or keyvalue variables"
+      )
     }
   }
 
   # Check template name if required
-  if (checkname && guide$template.name != result$template.metadata$template.name) {
+  if (
+    checkname && guide$template.name != result$template.metadata$template.name
+  ) {
     rlang::abort(glue::glue(
       "The name of the guide ({guide$template.name}) does not match the name of the excel template ({result$template.metadata$template.name})."
     ))
@@ -332,7 +399,9 @@ combine_results <- function(existing, chunk, type) {
     "table" = dplyr::bind_rows(existing, chunk),
     "platedata" = suppressMessages(dplyr::full_join(existing, chunk)),
     "cells" = c(existing, chunk),
-    rlang::abort(glue::glue("Unsupported location type for combining results: {type}"))
+    rlang::abort(glue::glue(
+      "Unsupported location type for combining results: {type}"
+    ))
   )
 }
 
