@@ -80,7 +80,8 @@ read_keyvalue <- function(
       drfile,
       sheet = sheet,
       range = range,
-      col_names = c("key", "value")
+      col_names = c("key", "value"),
+      col_types = c("text", "list") # Key column is read as text; value column is read as "list" to preserve native Excel types (numeric, text, etc.), so that R's own as.character() is used for conversion instead of readxl's internal conversion which yields "9.3000000000000007" for 9.3
     )
   }) |>
     dplyr::bind_rows()
@@ -279,7 +280,7 @@ short_to_longnames <- gentranslator('short-long')
 #' Read all data from a spreadsheet according to a reporting template guide. The
 #' data will be returned as a list with the optional elements keyvalue, table and
 #' platedata if defined in the guide. The minimal and maximal template versions
-#' of the guide mustbe compatible with that of the template in which the data
+#' of the guide must be compatible with that of the template in which the data
 #' were recorded. Furthermore, the name of the template must match the template
 #' name in the guide when when `checkname` is `TRUE`.
 #' @details

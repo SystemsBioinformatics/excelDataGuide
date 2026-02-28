@@ -20,7 +20,7 @@ A list with up to three elements
 Read all data from a spreadsheet according to a reporting template guide. The
 data will be returned as a list with the optional elements keyvalue, table and
 platedata if defined in the guide. The minimal and maximal template versions
-of the guide mustbe compatible with that of the template in which the data
+of the guide must be compatible with that of the template in which the data
 were recorded. Furthermore, the name of the template must match the template
 name in the guide when when \code{checkname} is \code{TRUE}.
 }

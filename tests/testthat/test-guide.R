@@ -1,5 +1,5 @@
 test_that("Reading a spreadsheet map works", {
-  expect_no_error(read_guide(test_path("testdata/guide_competition_1_0.yml")))
+  expect_no_error(read_guide(test_path("fixtures/guide_competition_1_0.yml")))
 })
 
 test_that("Function check_dim works", {
@@ -12,8 +12,8 @@ test_that("Function check_dim works", {
 })
 
 #test_that("check_guide works for correct guides", {
-  # expect_no_error(read_guide(test_path("testdata/goodguides/guide_competition_9_3.yml")))
-  # expect_no_error(read_guide(test_path("testdata/goodguides/guide_without_platedata.yml")))
-  # expect_no_error(read_guide(test_path("testdata/goodguides/guide_with_two_plates.yml")))
-  # expect_no_error(read_guide(test_path("testdata/goodguides/guide_without_templatemetadata.yml")))
+  # expect_no_error(read_guide(test_path("fixtures/goodguides/guide_competition_9_3.yml")))
+  # expect_no_error(read_guide(test_path("fixtures/goodguides/guide_without_platedata.yml")))
+  # expect_no_error(read_guide(test_path("fixtures/goodguides/guide_with_two_plates.yml")))
+  # expect_no_error(read_guide(test_path("fixtures/goodguides/guide_without_templatemetadata.yml")))
 #})
