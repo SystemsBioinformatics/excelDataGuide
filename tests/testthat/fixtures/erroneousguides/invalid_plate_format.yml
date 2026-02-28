@@ -1,0 +1,18 @@
+guide.version: '1.0'
+template.name: test
+template.min.version: '1.0'
+template.max.version: ~
+plate.format: 192
+locations:
+  - sheet: description
+    type: keyvalue
+    varname: .template
+    translate: false
+    ranges:
+      - A1:B1
+  - sheet: _data
+    type: platedata
+    translate: false
+    varname: plate
+    ranges:
+      - A1:M9

@@ -1,0 +1,17 @@
+guide.version: '1.0'
+template.name: test
+template.min.version: '1.0'
+template.max.version: ~
+locations:
+  - sheet: description
+    type: keyvalue
+    varname: .template
+    translate: false
+    ranges:
+      - A1:B1
+  - sheet: description
+    type: keyvalue
+    varname: metadata
+    translate: false
+    ranges:
+      - A2:B5

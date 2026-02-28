@@ -59,7 +59,7 @@ validate_unique_names <- function(names_vector, name_type) {
 #' @noRd
 #'
 check_guide <- function(guide) {
-  ## NOTE: Most of the validation of a guide should be performed using the JSON schema
+  ## NOTE: Most of the validation of a guide should be performed using the schema validator before the guide is used
 
   # Ensure translations are optional
   if (!"translations" %in% names(guide)) {
@@ -69,6 +69,17 @@ check_guide <- function(guide) {
   # Validate plate.format if platedata is present
   if ("platedata" %in% unique(sapply(guide$locations, `[[`, "type"))) {
     validate_plate_format(guide)
+  }
+
+  # validate presence of .template variable in locations
+  if (
+    !any(sapply(guide$locations, function(loc) {
+      isTRUE(loc$varname == ".template")
+    }))
+  ) {
+    rlang::abort(
+      "The spreadsheet guide must contain the '.template' element with at least a version key."
+    )
   }
 
   # Validate each location in the guide
