@@ -27,6 +27,7 @@ kvlist_to_table <- function(kvlist, guide, reverse.translate = TRUE) {
 }
 
 #' @title Using stars to indicate rejected values
+
 #' @param x A character vector
 #' @description
 #' If a template uses the convention of putting a star in front of or behind

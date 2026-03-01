@@ -78,7 +78,7 @@ check_guide <- function(guide) {
     }))
   ) {
     rlang::abort(
-      "The spreadsheet guide must contain the '.template' element with at least a version key."
+      "The spreadsheet guide must contain the '.template' element with the template version."
     )
   }
 
