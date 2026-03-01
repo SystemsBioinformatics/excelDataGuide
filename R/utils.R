@@ -1,3 +1,45 @@
+#' Verify the CUE validation hash embedded in a guide file
+#'
+#' Checks that the \code{cue.verified} field is present and correctly formatted.
+#' This confirms the guide was processed by \code{validate_and_sign.sh} after
+#' passing CUE schema validation. The hash itself is not recomputed from R;
+#' use \code{verify_guide.sh} in \code{data-raw/} for full hash verification.
+#'
+#' @param path Path to the guide YAML file (used only in messages)
+#' @param guide Already-parsed guide list (from \code{yaml::read_yaml})
+#' @return Invisibly \code{NULL}; called for its side effects (warnings/errors)
+#' @noRd
+#'
+check_cue_hash <- function(path, guide) {
+  stored_hash <- guide[["cue.verified"]]
+
+  if (is.null(stored_hash)) {
+    rlang::warn(
+      c(
+        "!" = glue::glue("Guide file has no 'cue.verified' field: {path}"),
+        "i" = "Run validate_and_sign.sh to validate with CUE and embed a verification hash."
+      ),
+      use_cli_format = TRUE
+    )
+    return(invisible(NULL))
+  }
+
+  if (!grepl("^sha256:[a-f0-9]{64}$", stored_hash)) {
+    rlang::abort(glue::glue(
+      "The 'cue.verified' field has an invalid format in {path}.\n",
+      "  Found:    '{stored_hash}'\n",
+      "  Expected: 'sha256:<64 lowercase hex characters>'"
+    ))
+  }
+
+  rlang::inform(
+    c("v" = glue::glue("Guide CUE-verified: {stored_hash}")),
+    use_cli_format = TRUE
+  )
+
+  invisible(NULL)
+}
+
 #' Create a table from a list of key-value pairs
 #' @param kvlist A list of key-value pairs
 #' @param guide A data guide

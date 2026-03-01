@@ -1,6 +1,6 @@
-guide.version: '1.0'
+guide.version: "1.0"
 template.name: competition
-template.min.version: '9.3'
+template.min.version: "9.3"
 template.max.version: ~
 plate.format: 96
 locations:
@@ -142,3 +142,4 @@ translations:
     short: itm2Mw
   - long: Run identifier 2
     short: run2ID
+cue.verified: sha256:872121d48d04cb6d17c29f3ffff7af432fa619f641757a423e2bb0dc64deab00

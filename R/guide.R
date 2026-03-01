@@ -8,10 +8,22 @@
 #' type, as well as instructions how to create and test the validity, please
 #' see the vignettes.
 #'
+#' @param verify_hash If \code{TRUE}, checks that the guide file contains a
+#'   \code{cue.verified} field with a valid SHA256 hash, confirming it was
+#'   signed by \code{validate_and_sign.sh} after successful CUE validation.
+#'   Issues a warning when the field is absent; aborts when the field is
+#'   present but malformed. Does not recompute the hash (use
+#'   \code{verify_guide.sh} in \code{data-raw/} for full hash verification).
+#'   Defaults to \code{FALSE}.
 #' @export
 #'
-read_guide <- function(path) {
+read_guide <- function(path, verify_hash = FALSE) {
   guide <- yaml::read_yaml(path)
+
+  if (verify_hash) {
+    check_cue_hash(path, guide)
+  }
+
   check_guide(guide)
 
   if ("translations" %in% names(guide)) {

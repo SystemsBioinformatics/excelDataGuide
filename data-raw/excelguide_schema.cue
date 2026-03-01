@@ -1,4 +1,4 @@
-// usage: cue vet -c schema.cue file.yml
+// usage: cue vet -c excelguide_schema.cue file.yml
 
 // Excel Data Guide Schema
 // This schema validates Excel template guide files that describe how to extract
@@ -12,6 +12,21 @@
 "plate.format"!:         #Plateformat
 "locations"!: [...#Location]
 "translations": [...#Translation]
+
+// Optional field added by validate_and_sign.sh after successful CUE validation.
+// Format: sha256:<64 lowercase hex characters>
+"cue.verified"?: =~"^sha256:[a-f0-9]{64}$"
+
+// Validate that exactly one location uses the reserved varname ".template"
+// (list comprehension filters locations; [_] asserts exactly one match exists)
+// _templateLocations: [for loc in locations if loc.varname == ".template" {loc}]
+// _templateLocations: [_]
+// NOTE: the constraint "at least one location must have varname == '.template'" cannot
+// be expressed here. CUE comprehensions require a closed, concrete list to iterate
+// over, but "locations" is an open list type ([...#Location]). Additionally,
+// string-labelled fields ("locations"!) are not resolvable as identifier references
+// inside a for expression, which causes a "reference not found" error at vet time.
+// This constraint is enforced at runtime by check_guide() in R/guide.R instead.
 
 // Version constraint: must be in major.minor format (e.g., "1.0", "2.3")
 #Version: =~"^\\d+\\.\\d+$"

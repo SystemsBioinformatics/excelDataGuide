@@ -11,5 +11,6 @@ in
 pkgs.mkShellNoCC {
   packages = with pkgs; [
     cue
+    yq-go  # YAML processor used by validate_and_sign.sh and verify_guide.sh
   ];
 }
