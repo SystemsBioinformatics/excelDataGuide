@@ -110,8 +110,9 @@ validate_plate_format <- function(guide) {
     )
   }
   if (!(as.character(guide$plate.format) %in% names(.plateformats))) {
+    formats <- names(.plateformats)
     rlang::abort(glue::glue(
-      "The plate format in the spreadsheet guide is not valid. It must be one of '24', '48', '96', or '384'."
+      "The plate format in the spreadsheet guide is not valid. It must be one of {paste0(formats, collapse = ', ')}"
     ))
   }
 }
