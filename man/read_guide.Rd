@@ -4,10 +4,18 @@
 \alias{read_guide}
 \title{Read a spreadsheet data guide}
 \usage{
-read_guide(path)
+read_guide(path, verify_hash = FALSE)
 }
 \arguments{
 \item{path}{The path to the guide file}
+
+\item{verify_hash}{If \code{TRUE}, checks that the guide file contains a
+\code{cue.verified} field with a valid SHA256 hash, confirming it was
+signed by \code{validate_and_sign.sh} after successful CUE validation.
+Issues a warning when the field is absent; aborts when the field is
+present but malformed. Does not recompute the hash (use
+\code{verify_guide.sh} in \code{data-raw/} for full hash verification).
+Defaults to \code{FALSE}.}
 }
 \value{
 A list object with the guide data
