@@ -33,7 +33,7 @@ locations:
     ranges:
       - A10:B21
       - A24:B25
-  - sheet: _data
+  - sheet: "_data"
     type: platedata
     translate: false
     atomicclass:
@@ -59,13 +59,13 @@ locations:
       - A71:M79
       - A81:M89
       - A91:M99
-  - sheet: _data
+  - sheet: "_data"
     type: table
     translate: false
     varname: rejections
     ranges:
       - A101:B111
-  - sheet: _parameters
+  - sheet: "_parameters"
     type: keyvalue
     translate: false
     varname: parameters
@@ -75,13 +75,13 @@ locations:
       - A27:B28
       - A31:B32
       - A35:B36
-  - sheet: _parameters
+  - sheet: "_parameters"
     type: keyvalue
     translate: false
     varname: parameters
     ranges:
       - A39:B39
-  - sheet: concentration response
+  - sheet: "concentration response"
     type: table
     translate: false
     varname: userresults
@@ -98,7 +98,7 @@ locations:
         cell: G6
       - name: spread.itm2
         cell: G33
-  - sheet: plate + experiment control
+  - sheet: "plate + experiment control"
     type: cells
     varname: userresults
     translate: false
@@ -110,36 +110,36 @@ locations:
 translations:
   - long: Version
     short: template.version
-  - long: Template Name
+  - long: "Template Name"
     short: template.name
-  - long: Study identifier
+  - long: "Study identifier"
     short: studyID
-  - long: Experiment identifier
+  - long: "Experiment identifier"
     short: exptID
-  - long: Plate identifier
+  - long: "Plate identifier"
     short: plateID
-  - long: Run identifier
+  - long: "Run identifier"
     short: runID
-  - long: Instrument identifier
+  - long: "Instrument identifier"
     short: instrID
-  - long: Experimenter name
+  - long: "Experimenter name"
     short: experimenter
-  - long: Date of experiment
+  - long: "Date of experiment"
     short: date
-  - long: Laboratory identifier
+  - long: "Laboratory identifier"
     short: labID
-  - long: Temperature (°C)
+  - long: "Temperature (°C)"
     short: temp
-  - long: Item 1
+  - long: "Item 1"
     short: itm1ID
-  - long: Molar mass 1
+  - long: "Molar mass 1"
     short: itm1Mw
-  - long: Run identifier 1
+  - long: "Run identifier 1"
     short: run1ID
-  - long: Item 2
+  - long: "Item 2"
     short: itm2ID
-  - long: Molar mass 2
+  - long: "Molar mass 2"
     short: itm2Mw
-  - long: Run identifier 2
+  - long: "Run identifier 2"
     short: run2ID
-cue.verified: sha256:872121d48d04cb6d17c29f3ffff7af432fa619f641757a423e2bb0dc64deab00
+cue.verified: "sha256:b25ae0677ab5d34dacddcb20dc7d0d61b6e119c106ffb040fee4a9e4e89d1b69"

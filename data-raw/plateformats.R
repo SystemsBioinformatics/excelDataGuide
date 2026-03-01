@@ -1,10 +1,14 @@
 ## code to prepare `.plateformats`
 
-## Note that this must match the allowed formats in the json schema file
-## excelguide_schema.json
+## Note that this must match the allowed formats in the CUE schema file
+## excelguide_schema.cue, field #Plateformat
 
-schema <- jsonlite::read_json("data-raw/excelguide_schema.json")
-schema.plateformats <- unique(unlist(schema$properties$plate.format$enum))
+cue_lines <- readLines("data-raw/excelguide_schema.cue")
+plateformat_line <- cue_lines[grep("^#Plateformat:", cue_lines)]
+schema.plateformats <- trimws(strsplit(
+  sub("^#Plateformat:\\s*", "", plateformat_line),
+  "\\|"
+)[[1]])
 
 .plateformats <- list(
   "24" = list(
@@ -25,7 +29,10 @@ schema.plateformats <- unique(unlist(schema$properties$plate.format$enum))
   )
 )
 
-stopifnot(all(names(.plateformats) %in% schema.plateformats) && all(schema.plateformats %in% names(.plateformats)))
+stopifnot(
+  all(names(.plateformats) %in% schema.plateformats) &&
+    all(schema.plateformats %in% names(.plateformats))
+)
 
 generate_wellnames <- function(format) {
   row <- LETTERS[1:.plateformats[[format]]$rows]
