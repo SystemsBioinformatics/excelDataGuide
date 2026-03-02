@@ -102,19 +102,30 @@ will be interpreted as having a minor version <kbd>0</kbd>, *i.e.* a version
 "<kbd>2</kbd>" will be interpreted as "<kbd>2.0</kbd>".
 
 In practice this means that the format of the cell in which the version number
-is recorded should be *text*, and not *general* or *number*
+is recorded should formally be *text*, and not *general* or *number*. However, 
+in the package we do provide functionality to interpret these fields as version 
+numbers even if the cells in the template have *general* or *number* format.
 
-**A template name is optional**. Preferably, a template also has a name. Note 
-that the example in the figure above doesn't have a name.
+In the guide this is referred to as <kbd>guide.version</kbd>
+
+**A template name is optional**. Preferably, a template also has a name as a way
+for users to refer to it. Note that the example in the figure above doesn't 
+have a name.
+
+In the guide this field is referred to as <kbd>template.name</kbd>.
 
 **Checking compatibilty of template versions and a guide version**. We use 
 template version numbers to check compatibility with a guide. In principle
 the same guide can be used for multiple versions of a template as long as the 
-locations and names of variables indexed in the guide did not change. This is the 
-case when, for example, only explanatory texts or calculations or data validity
+locations and names of variables indexed in the guide did not change in new 
+template versions. This is the case when, for example, only explanatory texts 
+or calculations or data validity
 checks have changed in the template. When checking version compatibility we 
 assume that a guide is compatible with a consecutive range of template versions
 between a minimal and a maximal version number.
+
+In the guide these version numbers are referred to as <kbd>template.min.version</kbd> 
+and <kbd>template.max.version</kbd>.
 
 ### All cells are protected except those for data entry
 
