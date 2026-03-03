@@ -4,14 +4,20 @@
 // This schema validates Excel template guide files that describe how to extract
 // data from Excel workbooks with specific template formats.
 
-// Top-level required fields
+// REQUIRED FIELDS
+// Versions of guide and template
 "guide.version"!:        #Version
 "template.name"!:        string
 "template.min.version"!: #Version
 "template.max.version"!: #Version | null
-"plate.format"!:         #Plateformat
+// Plate format
+"plate.format"!: #Plateformat
+// Locations
 "locations"!: [...#Location]
-"translations": [...#Translation]
+
+// OPTIONAL FIELDS
+// Optional field translations
+"translations"?: [...#Translation]
 
 // Optional field added by validate_and_sign.sh after successful CUE validation.
 // Format: sha256:<64 lowercase hex characters>
@@ -28,6 +34,7 @@
 // inside a for expression, which causes a "reference not found" error at vet time.
 // This constraint is enforced at runtime by check_guide() in R/guide.R instead.
 
+// DEFINITIONS
 // Version constraint: must be in major.minor format (e.g., "1.0", "2.3")
 #Version: =~"^\\d+\\.\\d+$"
 
