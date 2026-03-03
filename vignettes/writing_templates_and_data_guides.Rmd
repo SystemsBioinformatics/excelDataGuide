@@ -162,7 +162,7 @@ Fixed parameters needed for calculations, for example for acceptance criteria or
 (parameters that are usually described in a SOP) are best entered on a separate sheet, and referred to by absolute
 references or by named references in calculations. This mechanism prevents you from having to search through the 
 entire template for formulas using these parameters if you need to change them, and it prevents you from accidentally 
-using wrong values in calculations. In the case of the example we have a separate hidden sheet called **_parameters** 
+using wrong values in calculations. In the case of the example we have a separate hidden sheet called **\_parameters** 
 for this purpose. This prevents users from accidentally modifying them, and keeps the template clean and organized. 
 The information in this sheet can be indexed in the data guide, and will then be available to script-based analyses as well.
 
@@ -174,7 +174,13 @@ knitr::include_graphics("images/data.png")
 
 ### Missing values in spreadsheets
 
-TODO
+We urge you to use the `NA()` function to represent missing values in your tenmplates, in particular in calculations. The advantage of using `NA()` is that calculations in the sheets will automatically handle `NA()` and pass them on to subsequent caclulations, avoiding errors and producing sensible results. A disadvantage of using `NA()` is that it requires special care to detect and handle missing values in formulas. One particularly weird problem is that you can not use detection of the string "#N/A" in a cell as a way to generically detect missing values in formulas, even though this "solution" is often presented on internet fora, even in official documentation. The reason is that different language settings of Excel use different string representations for missing values. You have to consistently use the `ISNA()` function to detect `NA()` values throughout your entire template.
+
+### Labeled values (bad values)
+
+You may have obtained raw measurements that you do not want to include in your analysis. Clearly, you should not delete these measurements from the spreadsheet, because labelling a value as a "bad" measurement is, to some degree, a subjective action with which an other user or your future self may disagree. Instead, you can label them as "bad". An easy way to do this is by adding a star before or behind the value, *e.g.* `1000*` or `*1000`. You should also add a note explaining why the value is bad in a table with columns of cell addresses and remarks at a logical position in the same sheet. You can detect such "starred" values in Excel by using for example the `ISERROR()`, `ISNUMBER()` or `ISNONTEXT()` functions in a clause in calculations with these values and set a calculated cell to `NA()` based on the result. For example, `=IF(NOT(ISNUMBER(A1)), NA(), A1)` will set the cell with this formula to `NA()` if the value is not a number. An additional visual aid to detect "starred" values is to use a different font color or cell background for such cells using conditional formatting.
+
+In the excelDataGuide package we provide the functions `has_star()` and `star_to_number()` to detect "starred" values, convert them back to numbers, but label them as "bad" in a separate column in the template output.
 
 ### What else?
 
