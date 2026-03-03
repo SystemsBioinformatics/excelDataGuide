@@ -35,7 +35,7 @@ You can install the development version of excelDataGuide in a recent version of
 pak::pak("SystemsBioinformatics/excelDataGuide")
 ```
 
-## Example
+## Usage
 
 The basic usage of the package requires only one command with two file paths: the path to the Excel data file and the path to the data guide file. Here is an example:
 
