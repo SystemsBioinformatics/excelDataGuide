@@ -2,8 +2,9 @@ pandoc: 3.1.11
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
-  writing_templates_and_data_guides: writing_templates_and_data_guides.html
-last_built: 2026-03-02T08:12Z
+  writing_data_guides: writing_data_guides.html
+  writing_templates: writing_templates.html
+last_built: 2026-03-03T21:07Z
 urls:
   reference: https://systemsbioinformatics.github.io/excelDataGuide/reference
   article: https://systemsbioinformatics.github.io/excelDataGuide/articles

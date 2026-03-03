@@ -2,4 +2,7 @@
 
 ### All vignettes
 
-- [writing_templates_and_data_guides](https://systemsbioinformatics.github.io/excelDataGuide/articles/writing_templates_and_data_guides.md):
+- [Writing data
+  guides](https://systemsbioinformatics.github.io/excelDataGuide/articles/writing_data_guides.md):
+- [Designing
+  templates](https://systemsbioinformatics.github.io/excelDataGuide/articles/writing_templates.md):
