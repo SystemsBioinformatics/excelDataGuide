@@ -19,46 +19,6 @@ knitr::opts_chunk$set(
 library(excelDataGuide)
 ```
 
-## Introduction
-
-Spreadsheets are used in biochemical laboratories for both recording and
-analyzing experiments. In case of routine experiments, spreadsheet templates
-are often used to streamline workflows and ensure consistency.
-
-The goal of the **excelDataGuide** package is to enable the use of Excel
-spreadsheets alongside scripting environments as effective data analysis tools.
-While scripting languages offer more flexibility and power — especially for
-analyzing large datasets across multiple workbooks — the spreadsheet is the
-*primary source of all data*.
-
-This *single source of truth* approach ensures that both spreadsheet-based
-and script-based analyses rely on the same underlying data and parameters.
-This includes:
-
-- **Metadata** (user data, instrument settings, *etc*.)
-- **Experimental parameters** (acceptance criteria, standard concentrations, *etc*.)
-- **Experimental data** (raw measurements, concentrations *etc*.)
-
-Parameters such as acceptance criteria and standard concentration are typically defined by standard
-operating procedures (SOPs) and can be stored in single cells or ranges of cells in a
-spreadsheet. They can be referred to by abolute referencing or by using named cells or named ranges.
-Other values, such as raw measurements or fitted parameters, vary per
-experiment and are entered by the user.
-
-Sometimes it may be beneficial for the script to also use *calculated data* 
-from the spreadsheet — especially when those calculations are
-automatically triggered upon user input and these results should be compared to
-results from a script-based analysis.
-
-## Spreadsheet templates and data guides
-
-The solution that we propose here is to use a data guide, a file that describes
-in a concise manner where data can be found in a template. Furthermore, it
-also describes the expected type of data (*e.g*, numeric or text or date) so that
-the data can be read in the correct format. The data guide is a *yaml* file. We
-chose this format because it has a simple structure, and can be easily read and
-edited in a text editor.
-
 ## Constructing a spreadsheet template
 
 To provide a link between the data structures of programming languages and
@@ -174,13 +134,59 @@ knitr::include_graphics("images/data.png")
 
 ### Missing values in spreadsheets
 
-We urge you to use the `NA()` function to represent missing values in your tenmplates, in particular in calculations. The advantage of using `NA()` is that calculations in the sheets will automatically handle `NA()` and pass them on to subsequent caclulations, avoiding errors and producing sensible results. A disadvantage of using `NA()` is that it requires special care to detect and handle missing values in formulas. One particularly weird problem is that you can not use detection of the string "#N/A" in a cell as a way to generically detect missing values in formulas, even though this "solution" is often presented on internet fora, even in official documentation. The reason is that different language settings of Excel use different string representations for missing values. You have to consistently use the `ISNA()` function to detect `NA()` values throughout your entire template.
+We strongly recommend using the `NA()` function to represent missing values in your templates, especially in calculations. Using `NA()` offers several benefits:
 
-### Labeled values (bad values)
+**Advantages:**
 
-You may have obtained raw measurements that you do not want to include in your analysis. Clearly, you should not delete these measurements from the spreadsheet, because labelling a value as a "bad" measurement is, to some degree, a subjective action with which an other user or your future self may disagree. Instead, you can label them as "bad". An easy way to do this is by adding a star before or behind the value, *e.g.* `1000*` or `*1000`. You should also add a note explaining why the value is bad in a table with columns of cell addresses and remarks at a logical position in the same sheet. You can detect such "starred" values in Excel by using for example the `ISERROR()`, `ISNUMBER()` or `ISNONTEXT()` functions in a clause in calculations with these values and set a calculated cell to `NA()` based on the result. For example, `=IF(NOT(ISNUMBER(A1)), NA(), A1)` will set the cell with this formula to `NA()` if the value is not a number. An additional visual aid to detect "starred" values is to use a different font color or cell background for such cells using conditional formatting.
+- Calculations automatically propagate `NA()` values through subsequent formulas, avoiding errors and producing sensible results
+- Missing values are handled consistently and transparently
 
-In the excelDataGuide package we provide the functions `has_star()` and `star_to_number()` to detect "starred" values, convert them back to numbers, but label them as "bad" in a separate column in the template output.
+**Challenges:**
+
+Missing values in Excel require special care in formulas. The main issue is that different language settings of Excel use different string representations for missing values (*e.g.*, `#N/A` in English, `#NV` in German). This creates problems:
+
+- You cannot reliably detect missing values using string matching like `"<>#N/A"`, even though this approach is often suggested online
+- Conditional aggregation functions (`SUMIF`, `COUNTIF`, *etc*.) do not work correctly with `NA()` values because they need a criterion like `<>#N/A` which detect the string `#N/A` in cells
+
+**Solutions:**
+
+- Always use the `ISNA()` function in your formulas to detect `NA()` values in cells
+- Always use `IFNA()` to handle `NA()` values in aggregation formulas. For example:
+  - `=SUM(IFNA(A1:A10, 0))` — sums values, treating `NA()` as 0
+  - `=PRODUCT(IFNA(A1:A10, 1))` — multiplies values, treating `NA()` as 1
+  - `=AVERAGE(IFNA(A1:A10, ""))` — calculates the average, treating `NA()` as ""
+  - `=COUNT(IFNA(A1:A10, ""))` — counts non-missing values, treating `NA()` as ""
+
+These formulas work correctly regardless of Excel's language setting and handle `NA()` values properly.
+
+### Flagged values (bad values)
+
+Sometimes you have raw measurements that you want to exclude from analysis, but deleting them from the spreadsheet is not advisable. Flagging (rather than deleting) allows others—or your future self—to reconsider whether the measurement is truly "bad," since this judgment can be subjective.
+
+**How to flag bad values:**
+Add a marker symbol (typically a star or asterisk) before or after the value:
+- `1000*` or `*1000` — marks a flagged measurement
+
+**Documenting flagged values:**
+In the same sheet, maintain a table documenting each flagged value with:
+- Cell address of the flagged measurement
+- Reason why it was flagged
+
+This creates an audit trail and allows someone to revisit the decision later.
+
+**Detecting flagged values in calculations:**
+You can detect "starred" values in Excel using type-checking functions (`ISNUMBER()`, `ISTEXT()`, *etc*.) and convert them to `NA()`. For example:
+
+`=IF(NOT(ISNUMBER(A1)), NA(), A1)` — returns `NA()` if the cell is not a number (i.e., contains a starred value like `1000*`)
+
+**Visual indicators:**
+Use conditional formatting to highlight flagged values with a distinct font color or cell background, making them visible at a glance.
+
+**In the excelDataGuide package:**
+The package provides two utility functions to work with flagged values:
+
+- `star_to_number()` — Removes the star marker and converts the value back to a number
+- `has_star()` — Detects which values are flagged (contain a star/asterisk). The output is a logical vector indicating which values are flagged. It can be used to create a column of flags next to the original values.
 
 ### What else?
 

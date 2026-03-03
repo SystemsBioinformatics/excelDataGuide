@@ -1,5 +1,5 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is generated from README.html. Please edit that file -->
 
 # excelDataGuide
 
@@ -7,79 +7,76 @@
 
 <!-- badges: end -->
 
-**excelDataGuide** is an R package designed to streamline the process of
-importing data from spreadsheet *data reporting templates* (DRTs) into
-R.
+**excelDataGuide** is an R package that streamlines reading data from
+standardized Excel spreadsheet templates into R.
 
-A *data reporting template* is a standardized spreadsheet file (in
-either xls or xlsx format) used for reporting and processing
-experimental data. These templates significantly reduce the time
-required for data analysis and encourage users to present their data in
-a structured format, minimizing errors and misinterpretations.
+## The problem
 
-The **excelDataGuide** package eliminates the need for data analysts to
-write and maintain complex code for reading data from various complex
-spreadsheet DRTs. Additionally, it offers a robust framework for
-validating data, ensuring that the correct data types are utilized, and
-facilitating data wrangling when necessary. This functionality supports
-*Interoperability* for DRTs, a key aspect of the
-[FAIR](https://www.go-fair.org/fair-principles/) principles.
+Spreadsheet templates are widely used in laboratories to standardize
+data recording and reduce errors. However, extracting data from these
+templates into R typically requires writing custom, template-specific
+code. This is tedious and error-prone.
 
-The package features a user-friendly interface for extracting data from
-Excel files and converting it into R objects. It accommodates three
-types of data structures: key-value pairs, tabular data, and
-microplate-formatted data. The locations of these structures within the
-Excel template are specified by a **data guide**, which is a YAML file —
-a structured format that is both human- and machine-readable.
+## The solution
+
+The **excelDataGuide** package eliminates this burden by:
+
+1.  **Defining a data guide** — a simple YAML file that describes where
+    data are located in your template and how they should be interpreted
+2.  **Reading data with one command** — the `read_data()` function uses
+    the guide to extract data correctly and automatically
+
+The data guide approach also supports the [FAIR
+principles](https://www.go-fair.org/fair-principles/) by making your
+data structure explicit and machine-readable.
 
 ## Installation
 
-You can install the development version of excelDataGuide in a recent
-version of R from GitHub with:
+You can install the development version of excelDataGuide from GitHub
+with:
 
 ``` r
 # install.packages("pak")
 pak::pak("SystemsBioinformatics/excelDataGuide")
 ```
 
-## Example
+## Quick start
 
-The basic usage of the package requires only one command with two file
-paths: the path to the Excel data file and the path to the data guide
-file. Here is an example:
+Reading data from an Excel template requires just two files: the
+template itself and a data guide.
 
 ``` r
 library(excelDataGuide)
+
+# Path to your Excel file
 datafile <- system.file("extdata", "example_data.xlsx", package = "excelDataGuide")
+
+# Path to the data guide (YAML file)
 guidefile <- system.file("extdata", "example_guide.yml", package = "excelDataGuide")
+
+# Read the data
 data <- read_data(datafile, guidefile)
 ```
 
-The output of the `read_data()` function is a list object the format of
-which is determined for a large part by the design of the data guide.
+The output is a list containing the data organized according to your
+guide.
 
-## How it works
+## Next steps
 
-When you design a template spreadsheet file for data reporting and
-analysis you also create a *data guide* file that specifies the
-structure and location of the data in the template. Examples of a
-template with data and of a data guide are provided in the package
-(`system.file("extdata", "example_data.xlsx", package = "excelDataGuide")`
-and
-`system.file("extdata", "example_guide.yml", package = "excelDataGuide")`).
+For detailed guidance on using this package:
 
-Once you have entered the data and metadata in a template you can use
-the `read_data()` function in the package to extract the data into R
-with a single command. The package will check and coerce the data types
-to the required formats.
+- **[Designing templates](articles/writing_templates.html)** — Best
+  practices for structuring your Excel templates (version numbers,
+  protected cells, parameter sheets, *etc.*).
 
-Details about the data guide format and how to write one as well as
-about how to design a template can be found in the package vignettes.
+- **[Writing data guides](articles/writing_data_guides.html)** —
+  Step-by-step instructions for creating YAML guides, with examples of
+  all four data types (keyvalue, cells, table, platedata) and a complete
+  working example.
 
 ## Future work
 
-- Complete the vignette
-  ([issue](https://github.com/SystemsBioinformatics/excelDataGuide/issues/2))
-- Provide guide and template structures for data types without upper
-  size limit, typically time series with no pre-determined length
-  ([issue](https://github.com/SystemsBioinformatics/excelDataGuide/issues/1)).
+- [Provide guide and template structures for unbounded data types (time
+  series,
+  *etc.*)](https://github.com/SystemsBioinformatics/excelDataGuide/issues/1)
+  \`\`\`
