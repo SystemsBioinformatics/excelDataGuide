@@ -23,9 +23,9 @@ test_that("Function well_from_rowcol works", {
   expect_error(well_from_rowcol("A", 1:2))
   expect_error(well_from_rowcol(NA, 1))
   expect_error(well_from_rowcol("A", NA))
-  expect_equal(well_from_rowcol("A", 1), "A01")
+  expect_equal(well_from_rowcol("A", 1), "A1")
   expect_equal(well_from_rowcol("H", 12), "H12")
-  expect_equal(well_from_rowcol(c("A","A","B"), c(10,1,4)), c("A10","A01","B04"))
+  expect_equal(well_from_rowcol(c("A","A","B"), c(10,1,4)), c("A10","A1","B4"))
 })
 
 test_that("Function rowcol_from_well works", {

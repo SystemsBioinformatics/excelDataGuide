@@ -1,3 +1,16 @@
+#' Normalize well names in a string that potentiallly contains wells
+#'
+#' @param v A vector with potentially sloppy well names
+#'
+#' @noRd
+to_well_names <- function(v) {
+  as.character(v) |>
+    stringr::str_remove_all(" ") |>
+    stringr::str_to_upper() |>
+    stringr::str_replace("(?<=[A-Z])0+", "")
+}
+
+
 #' Normalize a vector with well names.
 #'
 #' @param v A vector with potentially sloppy well names
@@ -17,10 +30,7 @@
 #'
 normalize_wells <- function(v, format = NULL) {
   # Normalize well names
-  v <- as.character(v) |>
-    stringr::str_remove_all(" ") |>
-    stringr::str_to_upper() |>
-    stringr::str_replace("(?<=[A-Z])0+", "")
+  v <- to_well_names(v)
 
   # Validate well names if format is provided
   if (!is.null(format)) {
@@ -29,6 +39,46 @@ normalize_wells <- function(v, format = NULL) {
 
   # Mark invalid well names as NA
   v[!stringr::str_detect(v, "^[A-Z]+\\d+$")] <- NA
+  v
+}
+
+#' Try to parse a string with a potential series of wells
+#'
+#' Users sometimes enter multiple well names in a single string. This function
+#' attempts to parse such a string and returns a vector of well names.
+#'
+#' @param v A character vector of length 1 with a potential series of well names
+#' @param format A well format string (e.g., "96", "384", "1536")
+#' @return A vector with well names or `NA` values
+#'
+parse_well_series <- function(v, format) {
+  # test length
+  if (length(v) != 1) {
+    rlang::abort(glue::glue(
+      "The argument should be a vector of lenght 1, but the length equals {length(v)}."
+    ))
+  }
+
+  # Normalize potential well names
+  v <- to_well_names(v)
+
+  # Detect the splitting character(s)
+  #   - if comma then assume non-contiguous series
+  #   - if dash or colon then assume contiguous series
+  split_char <- stringr::str_extract(v, "[^A-Z\\d]+")
+  if (!is.null(split_char)) {
+    if (split_char == ",") {
+      # Non-contiguous series
+      v <- stringr::str_split(v, split_char)
+      v <- unlist(v)
+    } else if (split_char == "-" || split_char == ":") {
+      # Contiguous series
+      v <- stringr::str_split(v, split_char)
+      start_rowcol <- rowcol_from_well(v[[1]])
+      end_rowcol <- rowcol_from_well(v[[2]])
+      v <- seq(from = start_rowcol, to = end_rowcol, by = 1)
+    }
+  }
   v
 }
 
@@ -95,11 +145,11 @@ well_from_rowcol <- function(row, col) {
     rlang::abort("Both 'row' and 'col' must not contain NA values.")
   }
   if (length(row) != length(col)) {
-    rlang::abort("The lengths of 'row' and 'col' must be the same.")
+    rlang::abort("The lengths of 'row' and 'col' must be equal.")
   }
 
   # Generate well names
-  paste0(row, sprintf("%02d", as.numeric(col)))
+  paste0(row, sprintf("%01d", as.numeric(col)))
 }
 
 #' Calculate row and column from well name.
