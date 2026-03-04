@@ -25,20 +25,62 @@ test_that("Function well_from_rowcol works", {
   expect_error(well_from_rowcol("A", NA))
   expect_equal(well_from_rowcol("A", 1), "A1")
   expect_equal(well_from_rowcol("H", 12), "H12")
-  expect_equal(well_from_rowcol(c("A","A","B"), c(10,1,4)), c("A10","A1","B4"))
+  expect_equal(
+    well_from_rowcol(c("A", "A", "B"), c(10, 1, 4)),
+    c("A10", "A1", "B4")
+  )
 })
 
 test_that("Function rowcol_from_well works", {
   expect_error(rowcol_from_well("A16", 48))
   expect_no_error(rowcol_from_well("A16", 384))
-  expect_equal(rowcol_from_well("A1", "24"), .plateformats[['24']]$map[1,c('row', 'col')])
-  expect_equal(rowcol_from_well(c("A1", "B2", "C3"), "24"), .plateformats[['24']]$map[c(1,6,11), c('row', 'col')])
-  expect_equal(rowcol_from_well(c("H12", "A1"), "96"), .plateformats[['96']]$map[c(96,1), c('row', 'col')])
+  expect_equal(
+    rowcol_from_well("A1", "24"),
+    .plateformats[['24']]$map[1, c('row', 'col')]
+  )
+  expect_equal(
+    rowcol_from_well(c("A1", "B2", "C3"), "24"),
+    .plateformats[['24']]$map[c(1, 6, 11), c('row', 'col')]
+  )
+  expect_equal(
+    rowcol_from_well(c("H12", "A1"), "96"),
+    .plateformats[['96']]$map[c(96, 1), c('row', 'col')]
+  )
   expect_error(rowcol_from_well("A1", c(96, 384)))
   expect_error(rowcol_from_well(c("A1", "B2"), 90))
 })
 
 test_that("Function rowcol_from_well yields no error when well is NA", {
   expect_no_error(rowcol_from_well(c("A1", NA), 96))
-  expect_equal(rowcol_from_well(c("A1", NA), 96), .plateformats[['96']]$map[c(1,NA), c('row', 'col')])
+  expect_equal(
+    rowcol_from_well(c("A1", NA), 96),
+    .plateformats[['96']]$map[c(1, NA), c('row', 'col')]
+  )
+})
+
+test_that("Function parse_well_series works on positive examples", {
+  expect_equal(
+    parse_well_series("A1, A3", format = 96),
+    c("A1", "A3")
+  )
+  expect_equal(
+    parse_well_series("A1:B2", format = 96),
+    c("A1", "B1", "A2", "B2")
+  )
+  expect_equal(
+    parse_well_series("A1-A4", format = 96),
+    c("A1", "A2", "A3", "A4")
+  )
+  expect_equal(
+    parse_well_series("A1-B2", format = 384),
+    c("A1", "B1", "A2", "B2")
+  )
+  expect_equal(
+    parse_well_series("A1", format = 96),
+    c("A1")
+  )
+  expect_equal(
+    parse_well_series("", format = 96),
+    c("")
+  )
 })

@@ -66,19 +66,27 @@ parse_well_series <- function(v, format) {
   #   - if comma then assume non-contiguous series
   #   - if dash or colon then assume contiguous series
   split_char <- stringr::str_extract(v, "[^A-Z\\d]+")
-  if (!is.null(split_char)) {
+  if (!is.null(split_char) && !is.na(split_char)) {
     if (split_char == ",") {
       # Non-contiguous series
       v <- stringr::str_split(v, split_char)
       v <- unlist(v)
     } else if (split_char == "-" || split_char == ":") {
       # Contiguous series
-      v <- stringr::str_split(v, split_char)
-      start_rowcol <- rowcol_from_well(v[[1]])
-      end_rowcol <- rowcol_from_well(v[[2]])
-      v <- seq(from = start_rowcol, to = end_rowcol, by = 1)
+      v <- stringr::str_split(v, split_char) |>
+        unlist()
+      start_rowcol <- rowcol_from_well(v[1], format)
+      end_rowcol <- rowcol_from_well(v[2], format)
+      rows_cols <- expand.grid(
+        row = LETTERS[seq(
+          which(LETTERS == start_rowcol$row),
+          which(LETTERS == end_rowcol$row)
+        )],
+        col = seq(start_rowcol$col, end_rowcol$col)
+      )
+      v <- well_from_rowcol(rows_cols$row, rows_cols$col)
     }
-  }
+  } # else the original string with normalized names is returned
   v
 }
 
