@@ -57,10 +57,15 @@ read_guide <- function(path, verify_hash = FALSE) {
 #' @noRd
 #'
 validate_unique_names <- function(names_vector, name_type) {
-  if (anyDuplicated(names_vector)) {
-    duplicates <- unique(names_vector[duplicated(names_vector)])
+  duplications <- duplicated(names_vector)
+  if (any(duplications)) {
+    duplicates <- glue::glue_collapse(
+      glue::double_quote(unique(names_vector[duplications])),
+      sep = ', ',
+      last = " and "
+    )
     rlang::abort(glue::glue(
-      "Duplicate keys in {name_type} names of the translations: {paste0(duplicates, collapse = ', ')}"
+      "Duplicate keys in {name_type} names of the translations: {duplicates}"
     ))
   }
 }

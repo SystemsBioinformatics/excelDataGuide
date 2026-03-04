@@ -49,6 +49,17 @@ test_that("check_guide: guide without a .template location yields an error", {
   )
 })
 
+test_that("Function validate_unique_names works correctly", {
+  expect_error(
+    validate_unique_names(c("a", "b", "a"), "short"),
+    regexp = "Duplicate keys in short names"
+  )
+  expect_error(
+    validate_unique_names(c("a", "b", "a"), "long"),
+    regexp = "Duplicate keys in long names"
+  )
+})
+
 test_that("read_guide: duplicate long names in translations yield an error", {
   expect_error(
     read_guide(test_path(
