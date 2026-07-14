@@ -344,6 +344,7 @@ later with:
 In R, you can also check the hash when loading a guide:
 
 ``` r
+
 guide <- read_guide("path/to/guide.yml", verify_hash = TRUE)
 ```
 

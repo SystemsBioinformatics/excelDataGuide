@@ -9,6 +9,8 @@
   : Translation between long and short variable names
 - [`normalize_wells()`](https://systemsbioinformatics.github.io/excelDataGuide/reference/normalize_wells.md)
   : Normalize a vector with well names.
+- [`parse_well_series()`](https://systemsbioinformatics.github.io/excelDataGuide/reference/parse_well_series.md)
+  : Try to parse a string with a potential series of wells
 - [`read_data()`](https://systemsbioinformatics.github.io/excelDataGuide/reference/read_data.md)
   : Read all data from a spreadsheet
 - [`read_guide()`](https://systemsbioinformatics.github.io/excelDataGuide/reference/read_guide.md)

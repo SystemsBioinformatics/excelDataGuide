@@ -30,6 +30,7 @@ You can install the development version of excelDataGuide from GitHub
 with:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("SystemsBioinformatics/excelDataGuide")
 ```
@@ -40,6 +41,7 @@ Reading data from an Excel template requires just two files: the
 template itself and a data guide.
 
 ``` r
+
 library(excelDataGuide)
 
 # Path to your Excel file

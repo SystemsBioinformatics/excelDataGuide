@@ -16,3 +16,8 @@ Useful links:
 
 **Maintainer**: Douwe Molenaar <d.molenaar@vu.nl>
 ([ORCID](https://orcid.org/0000-0001-7108-4545))
+
+Authors:
+
+- Douwe Molenaar <d.molenaar@vu.nl>
+  ([ORCID](https://orcid.org/0000-0001-7108-4545))
