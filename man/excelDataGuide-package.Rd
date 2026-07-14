@@ -19,5 +19,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Douwe Molenaar \email{d.molenaar@vu.nl} (\href{https://orcid.org/0000-0001-7108-4545}{ORCID})
 
+Authors:
+\itemize{
+  \item Douwe Molenaar \email{d.molenaar@vu.nl} (\href{https://orcid.org/0000-0001-7108-4545}{ORCID})
+}
+
 }
 \keyword{internal}
